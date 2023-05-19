@@ -4,20 +4,25 @@
 # include <iostream>
 # include <string>
 # include <sys/socket.h>
+# include <sys/types.h>
 
 class Server
 {
     public:
 
-        Server(char *port, char *password);
+        Server(char *port, char *pwd);
         ~Server(void);
 
-        Server  &operator=(Server const & rRhs);
 
     private:
 
+        std::string mPwd;
+        int         mServerPort;
+
         Server(void);
         Server(Server const &rSrc);
+
+        Server  &operator=(Server const & rRhs);
 
 };
 
