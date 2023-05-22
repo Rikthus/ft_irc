@@ -13,7 +13,7 @@
  - Handle error cases, such as when a client sends an invalid message or disconnects unexpectedly. 
 
 
- # Implementation Basics
+ ## Implementation Basics
 
  1. Create a socket using the socket() function. This function returns a socket descriptor that you can use to identify the socket in later function calls.
 
@@ -27,7 +27,7 @@
 
  6. To handle multiple incoming connections, you can use the select() function to wait for activity on multiple sockets simultaneously. The select() function allows you to specify a set of sockets to monitor for read, write, or error events. When an event occurs on one of the sockets, select() returns with information about the socket that caused the event.
 
- # Irc Commands
+ ## Irc Commands
 
  - /join #channel							(join channel)
  - /list [#channel] [-MIN #] [-MAX #]		(list channels)
