@@ -37,3 +37,10 @@
  - /nick nickname							(changes nickname)
  - /leave #channel							(leaves a channel)
  - /quit [message]							(exit irc)
+
+ ## Needed
+
+ - `class Server` WIP maxperei 
+ - `class Channel`
+ - `class Client`
+ - a specific class for each command (eg: `class Join`)

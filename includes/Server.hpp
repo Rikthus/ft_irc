@@ -10,6 +10,8 @@ class Server
 {
     public:
 
+        void    launch(void);
+
         Server(char *port, char *pwd);
         ~Server(void);
 
@@ -18,10 +20,10 @@ class Server
         std::string mPwd;
         int         mServerPort;
 
+        bool portVerif(char *str) const;
 
         Server(void);
         Server(Server const &rSrc);
-
         Server  &operator=(Server const & rRhs);
 
 };

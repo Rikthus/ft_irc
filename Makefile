@@ -1,6 +1,6 @@
 #update on every project
 NAME := ircserv
-LST_SRC := main
+LST_SRC := main Server
 
 #update to match c or cpp
 CC := c++
@@ -10,14 +10,14 @@ CPPFLAGS := -std=c++98
 
 #update if needed
 CFLAGS = -Wall -Wextra -Werror -MD -I$(DIR_INC) #-fsanitize=address -g3
-DIR_SRC := source#.
+DIR_SRC := sources#.
 #SUB_DIR_LST := core test
 
 #shouldn't need to update
 RM := rm -rf
 MD := mkdir -p
 
-DIR_INC := include
+DIR_INC := includes
 DIR_OBJ := .object
 
 OBJ=$(addprefix $(DIR_OBJ)/,$(addsuffix .o,$(LST_SRC)))
