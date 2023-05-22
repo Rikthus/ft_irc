@@ -13,12 +13,11 @@ class Server
         Server(char *port, char *pwd);
         ~Server(void);
 
-
     private:
 
         std::string mPwd;
         int         mServerPort;
-        
+
 
         Server(void);
         Server(Server const &rSrc);
