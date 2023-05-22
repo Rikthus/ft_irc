@@ -18,6 +18,7 @@ class Server
 
         std::string mPwd;
         int         mServerPort;
+        
 
         Server(void);
         Server(Server const &rSrc);

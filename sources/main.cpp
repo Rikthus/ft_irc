@@ -4,7 +4,7 @@ bool portVerif(char *str)
 {
     int value;
 
-    for (int i = 0; str[i], i++)
+    for (int i = 0; str[i]; i++)
     {
         if (i > 3 || !std::isdigit(str[i]))
             return (false);
@@ -31,4 +31,7 @@ int main(int argc, char **argv)
 
     Server  ircServer(argv[1], argv[2]);
     
+    int server_socket = socket(AF_INET, SOCK_STREAM, 0);
+
+
 }
