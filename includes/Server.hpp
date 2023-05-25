@@ -3,8 +3,17 @@
 
 # include <iostream>
 # include <string>
+# include <unistd.h>
 # include <sys/socket.h>
 # include <sys/types.h>
+# include <netinet/in.h>
+# include <fcntl.h>
+# include <arpa/inet.h>
+# include <map>
+
+# include "Client.hpp"
+
+# define MAX_CLIENTS 10
 
 class Server
 {
@@ -17,10 +26,14 @@ class Server
 
     private:
 
-        std::string mPwd;
-        int         mServerPort;
+        std::string				mPwd;
+        int						mServerPort;
+        int						mServerSocketFd;
 
-        bool portVerif(char *str) const;
+        std::map<int, Client &>	mClientList;
+
+        bool	portVerif(char *str) const;
+		void	clientHandling(void);
 
         Server(void);
         Server(Server const &rSrc);
