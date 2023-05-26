@@ -1,6 +1,6 @@
 #update on every project
 NAME := ircserv
-LST_SRC := main Server
+LST_SRC := main Server Client
 
 #update to match c or cpp
 CC := c++
