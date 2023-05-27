@@ -6,13 +6,15 @@
 /*   By: tulipe <tulipe@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 18:11:17 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/27 13:10:07 by tulipe           ###   ########lyon.fr   */
+/*   Updated: 2023/05/27 23:20:31 by tulipe           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#ifndef CHANNEL_HPP
+# define CHANNEL_HPP
 
-#include "Client.hpp"
+# include "ft_irc.hpp"
+# include "Client.hpp"
 
 class Channel
 {
@@ -34,4 +36,8 @@ class Channel
 		bool		mInviteOnly;
 		bool		mCapped;
 		int			mMaxCapacity;
-}; 
+};
+
+typedef std::map<std::string, Channel>::iterator channelIt;
+
+#endif

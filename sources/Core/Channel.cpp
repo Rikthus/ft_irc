@@ -1,4 +1,4 @@
-#include "../includes/Channel.hpp"
+#include "../../includes/Core/Channel.hpp"
 
 //////**********************************//////
 //////				PUBLIC				//////
@@ -8,7 +8,8 @@
 //		BUILDERS		//
 //////////////////////////
 
-Channel::Channel(std::string chanName, int creatorSockfd, Client &creatorData, bool isPwd, std::string pwd): mName(chanName), mAdmin(creatorSockfd)
+Channel::Channel(std::string chanName, int creatorSockfd, Client &creatorData, bool isPwd, std::string pwd)
+				: mName(chanName), mAdmin(creatorSockfd)
 {
 	if (isPwd)
 	{
@@ -20,8 +21,11 @@ Channel::Channel(std::string chanName, int creatorSockfd, Client &creatorData, b
 		mPassProtected = false;
 		mPwd = "\0";
 	}
-	mClientList.insert(std::pair<int, Client &>(creatorSockfd, creatorData));
+	mClientList.insert(std::pair<int, Client &>(mAdmin, creatorData));
 	mOperators.push_back(creatorSockfd);
+	mInviteOnly = false;
+	mCapped = false;
+	mMaxCapacity = 0;
 }
 
 Channel::~Channel(void)	{}

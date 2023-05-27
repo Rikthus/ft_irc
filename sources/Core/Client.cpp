@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tulipe <tulipe@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 11:06:26 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/26 14:17:40 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/05/27 23:16:24 by tulipe           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/Client.hpp"
+#include "../../includes/Core/Client.hpp"
 
 Client::Client() : isAuthenticated(0), isRegistered(0)
 {

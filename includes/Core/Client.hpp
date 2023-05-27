@@ -3,21 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tulipe <tulipe@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 17:46:31 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/26 11:51:03 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/05/27 23:20:49 by tulipe           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#ifndef CLIENT_HPP
+# define CLIENT_HPP
 
-#include "ft_irc.hpp"
+# include "ft_irc.hpp"
 
 class Client
-    {
-        // typedef std::map<int, Client>::iterator clientIt;
-        
+{        
         public:
             Client();
             ~Client();
@@ -51,6 +50,10 @@ class Client
             socklen_t           clilen;
             int                 clifd;
 };
+
+typedef std::map<int, Client>::iterator clientIt;
+
+#endif
 
 // void 	error(const char *msg);
 // void	authenticateClient(std::string msg, int fd, ft::Client &Client);
