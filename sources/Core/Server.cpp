@@ -95,7 +95,9 @@ Server::Server(char *port, char *pwd) : mSockfd(socket(AF_INET, SOCK_STREAM, 0))
     if (bind(mSockfd, (struct sockaddr *) &mServAddr, sizeof(mServAddr)) < 0)
         throw(std::runtime_error("Error: socket binding failed"));
     if (listen(mSockfd, 5) < 0)
+	{
         throw(std::runtime_error("Error: server launch failed"));
+	}
 	this->initCommands();
     std::cout << "Server is listening" << std::endl;
 }
@@ -105,7 +107,14 @@ Server::~Server(void)
 	std::map<std::string, ACmd *>::iterator	it;
 
     if (mSockfd >= 0)
+	{
         close(mSockfd);
+	}
+	for (std::map<std::string, ACmd *>::iterator itt = mCmdList.begin(); itt != mCmdList.end(); itt++)
+	{	
+		//delete itt->second;
+	}
+	std::cout << "Destructor called" << std::endl;
 }
 
 
