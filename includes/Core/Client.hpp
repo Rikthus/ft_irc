@@ -6,12 +6,11 @@
 /*   By: tulipe <tulipe@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 17:46:31 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/27 23:20:49 by tulipe           ###   ########lyon.fr   */
+/*   Updated: 2023/05/28 11:55:17 by tulipe           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CLIENT_HPP
-# define CLIENT_HPP
+#pragma once
 
 # include "ft_irc.hpp"
 
@@ -52,8 +51,6 @@ class Client
 };
 
 typedef std::map<int, Client>::iterator clientIt;
-
-#endif
 
 // void 	error(const char *msg);
 // void	authenticateClient(std::string msg, int fd, ft::Client &Client);

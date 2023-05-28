@@ -6,12 +6,11 @@
 /*   By: tulipe <tulipe@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 19:21:48 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/27 23:30:41 by tulipe           ###   ########lyon.fr   */
+/*   Updated: 2023/05/28 11:55:28 by tulipe           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_IRC_HPP
-# define FT_IRC_HPP
+#pragma once
 
 # include <stdlib.h>
 
@@ -29,14 +28,6 @@
 # include <arpa/inet.h>
 # include <vector>
 # include <map>
-
-class Server;
-class Client;
-class Channel;
-class ACmd;
-class JOIN;
-
-#endif
 
 /* Internet Relay Chat :
 Les clients IRC se connectent à des serveurs IRC afin d’accéder à des canaux.

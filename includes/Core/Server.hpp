@@ -1,17 +1,18 @@
-#ifndef SERVER_HPP
-# define SERVER_HPP
+#pragma once
 
 # include "ft_irc.hpp"
 # include "Channel.hpp"
 # include "Client.hpp"
 # include "../Commands/JOIN.hpp"
 
+class ACmd;
+
 class Server
 {
     public:
 
         void    	launch(void);
-		Channel 	*channelExists(std::string toFind);
+		Channel 	*findChannel(std::string toFind);
 
         Server(char *port, char *pwd);
         ~Server(void);
@@ -41,6 +42,6 @@ class Server
 		bool	checkDuplicateUser(std::string username);
         bool    checkCharacter(char character);
         bool    checkCharactersValidity(std::string name);
-};
 
-#endif
+        std::vector<std::string>    splitCommand(std::string cmd);
+};

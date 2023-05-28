@@ -62,7 +62,7 @@ void    Server::launch(void)
 	}
 }
 
-Channel *Server::channelExists(std::string toFind)
+Channel *Server::findChannel(std::string toFind)
 {
 	channelIt	it = mChannelList.find(toFind);
 	if (it != mChannelList.end())
@@ -173,7 +173,16 @@ void	Server::applyCommand(std::string line, std::string message, clientIt it, fd
 	}
 	else if (line == "JOIN")
 	{
-		itCmd->second->execute(this, it->first, it->second, message);
+		std::vector<std::string>	args;
+		for (int i = 0; message[i]; i++)
+		{
+			if (message[i] != ' ' && std::isspace(message[i]))
+				message.erase(i, 1);
+			else if (message[i] == ' ' && message[i + 1] == ' ')
+				message.erase(i--, 1);
+		}
+		args = splitCommand(message);
+		itCmd->second->execute(this, it->first, it->second, args);
 		return ;
 	}
 }
@@ -263,4 +272,20 @@ void	Server::registerClientsUser(std::string msg, int fd, Client &Client)
 	}
 	else
 		sendMessage(fd, "Username already taken");
+}
+
+std::vector<std::string>	Server::splitCommand(std::string cmd)
+{
+	std::vector<std::string>	args;
+	int	start = 0;
+	int end = cmd.find(" ");
+
+	while (end != -1)
+	{
+		args.push_back(cmd.substr(start, end - start));
+		start = end + 1;
+		end = cmd.find(" ", start);
+	}
+	args.push_back(cmd.substr(start, cmd.size() - start));
+	return (args);
 }

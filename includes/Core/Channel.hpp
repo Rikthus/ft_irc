@@ -6,12 +6,11 @@
 /*   By: tulipe <tulipe@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 18:11:17 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/27 23:20:31 by tulipe           ###   ########lyon.fr   */
+/*   Updated: 2023/05/28 11:54:56 by tulipe           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CHANNEL_HPP
-# define CHANNEL_HPP
+#pragma once
 
 # include "ft_irc.hpp"
 # include "Client.hpp"
@@ -39,5 +38,3 @@ class Channel
 };
 
 typedef std::map<std::string, Channel>::iterator channelIt;
-
-#endif
