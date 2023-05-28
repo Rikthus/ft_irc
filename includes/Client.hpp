@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 17:46:31 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/26 11:51:03 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/05/27 14:05:26 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,14 @@ class Client
             int         getPort() {return ClientAddr.sin_port;}
             bool        getAuthentication() {return isAuthenticated;}
             bool        getRegistration() {return isRegistered;}
+            bool        getUsBool() {return hasUsername;}
+            bool        getNiBool() {return hasNickname;}
             
             void        setClifd(int &fd) {this->clifd = fd;}
             void        setAuthentication() {this->isAuthenticated = true;}
             void        setRegistration() {this->isRegistered = true;}
-            void        setNickname(std::string name) {this->nickname = name;}
-            void        setUsername(std::string name) {this->username = name;}
+            void        setNickname(std::string name) {this->nickname = name;hasNickname = 1;}
+            void        setUsername(std::string name) {this->username = name;hasUsername = 1;}
             
             std::string getNickname() {return nickname;}
             std::string getUsername() {return username;}
@@ -47,6 +49,8 @@ class Client
             std::string         buffer;
             bool                isAuthenticated;
             bool                isRegistered;
+            bool                hasNickname;
+            bool                hasUsername;
             struct sockaddr_in  ClientAddr;
             socklen_t           clilen;
             int                 clifd;

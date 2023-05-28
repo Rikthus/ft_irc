@@ -6,13 +6,13 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 11:06:26 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/26 14:17:40 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/05/27 14:05:40 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/Client.hpp"
 
-Client::Client() : isAuthenticated(0), isRegistered(0)
+Client::Client() : isAuthenticated(0), isRegistered(0), hasNickname(0), hasUsername(0)
 {
 	clilen = sizeof(this->ClientAddr);
 }

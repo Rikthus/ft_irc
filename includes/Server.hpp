@@ -1,6 +1,10 @@
 #pragma once
 
 #include "Channel.hpp"
+#include "QUIT.hpp"
+#include "PASS.hpp"
+#include "NICK.hpp"
+#include "USER.hpp"
 
 class Server
 {
@@ -20,21 +24,17 @@ class Server
         int         mSockfd;
         int                     mOptval;
         struct      sockaddr_in mServAddr;
-        std::map<int,Client>    mClientsList;
+        std::map<int,Client>    mClientList;
+        std::map<Channel,Client> mChannelList;
 
         bool    portVerif(char *str) const;
         void    newClient(fd_set &readfds);
         void    sendMessage(int fd, std::string message);
 		void	applyCommand(std::string line, std::string message, clientIt it, fd_set &readfds);
 
-		void	authenticateClient(std::string msg, int fd, Client &Client);
-		void	registerClientsNick(std::string msg, int fd, Client &Client);
-		void	registerClientsUser(std::string msg, int fd, Client &Client);
+        bool    kickClient(fd_set &readfds, int fd, std::string arguments, std::string username);
 
-		bool	checkDuplicateNick(std::string nickname);
-		bool	checkDuplicateUser(std::string username);
-        bool    checkCharacter(char character);
-        bool    checkCharactersValidity(std::string name);
+        bool    checkExistingChannels(std::string name);
 
         Server(void);
         Server(Server const &rSrc);

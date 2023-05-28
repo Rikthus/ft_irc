@@ -1,6 +1,6 @@
 #update on every project
 NAME := ircserv
-LST_SRC := main Server Client
+LST_SRC := main Server Client Channel Parsing QUIT PASS NICK USER
 
 #update to match c or cpp
 CC := c++

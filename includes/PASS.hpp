@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Channel.hpp                                        :+:      :+:    :+:   */
+/*   PASS.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/10 18:11:17 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/27 14:24:25 by eavilov          ###   ########.fr       */
+/*   Created: 2023/05/27 12:45:06 by eavilov           #+#    #+#             */
+/*   Updated: 2023/05/27 15:40:52 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,11 @@
 
 #include "Client.hpp"
 
-class Channel
+class PASS
 {
-    typedef std::map<int, Client *> ClientData;
-
-    public:
-        Channel();
-        ~Channel();
-
-        std::string getName() const {return name;} // putain je sais pas pk mais si je le passe pas en const ca compile pas
-    
-    private:
-        ClientData  clients;
-        std::string name;
-        
-        //ft::Client  operator;
+	public:
+		PASS(std::string arguments, Client &user, std::string mPwd, int fd);
+		~PASS();
+	private:
+		const std::string type;
 };

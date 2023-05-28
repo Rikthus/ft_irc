@@ -22,14 +22,14 @@ void    Server::launch(void)
 			throw(std::runtime_error("Error: select loop failed"));
 		if (FD_ISSET(mSockfd, &tmp_fds))
 		    newClient(readfds);
-		for (clientIt it = mClientsList.begin(); it != mClientsList.end(); it++)
+		for (clientIt it = mClientList.begin(); it != mClientList.end(); it++)
 		{
 			if (FD_ISSET(it->first, &tmp_fds))
 			{
 				char buffer[1024];
 				int num_bytes = recv(it->first, buffer, sizeof(buffer), 0);
 				buffer[num_bytes] = 0;
-				std::cout << buffer;
+				//dprintf(1, "%s", buffer);
 				if (num_bytes < 0)
 				{
 					std::cout << "recv failed" << std::endl;
@@ -40,7 +40,7 @@ void    Server::launch(void)
 					std::cout << "Client " << ntohs(it->second.getPort()) << " disconnected" << std::endl;
 					close(it->first);
 					FD_CLR(it->first, &readfds);
-					mClientsList.erase(it);
+					mClientList.erase(it);
 					break ;
 				} 
 				else
@@ -52,7 +52,6 @@ void    Server::launch(void)
 					while (it->second.extractMessageFromBuffer(msg))
 					{
 						std::istringstream stream(msg);
-                        sendMessage(it->first, msg);
 						while (std::getline(stream, line, ' '))
 						    {applyCommand(line, msg, it, readfds);}
 					}
@@ -126,135 +125,70 @@ void Server::newClient(fd_set &readfds)
 	Client	newClient;
 	int		newClientFd = accept(mSockfd, (struct sockaddr *) &newClient.getStruct(), &newClient.getClilen());
 
-	mClientsList.insert (std::pair<int,Client>(newClientFd,newClient));
+	mClientList.insert (std::pair<int,Client>(newClientFd,newClient));
 	FD_SET(newClientFd, &readfds);
 
 	std::cout << "New connection from " << inet_ntoa(newClient.getAddr()) << '/' << ntohs(newClient.getPort()) << std::endl;
-	sendMessage(newClientFd, "Please authenticate yourself by entering the password with PASS xxxx\nThen register with NICK xxxx and USER xxxx");
 }
 
 void	Server::sendMessage(int fd, std::string message)
-{send(fd, message.append("\n").c_str(), message.size() + 1, 0);}
+{
+	if (read(fd, 0, 0) < 0)
+		return ;
+	send(fd, message.append("\n").c_str(), message.size() + 1, 0);
+}
+
+bool	Server::checkExistingChannels(std::string name)
+{
+	if (name.find(' ') != std::string::npos)
+		name.erase(0, name.find(' ') + 1);
+	if (name.find('\r') != std::string::npos)
+		name.erase(name.find('\r'));
+	std::cout << name << std::endl;
+	for (std::map<Channel,Client>::iterator it = mChannelList.begin(); it != mChannelList.end(); it++)
+	{
+		if (!it->first.getName().empty() && it->first.getName() == name)
+				return true;
+	}
+	return false;
+}
+
+bool	Server::kickClient(fd_set &readfds, int fd, std::string arguments, std::string username)
+{
+	try
+	{
+		QUIT	parser(arguments, mClientList, username);
+		parser.sendQuitMessage();
+		close(fd);
+		FD_CLR(fd, &readfds);
+	}
+	catch (const std::exception &e)
+	{
+		sendMessage(fd, e.what());
+		return false;
+	}
+	return true;
+}
 
 void	Server::applyCommand(std::string line, std::string message, clientIt it, fd_set &readfds)
 {
 	if (line == "PASS")
-	{authenticateClient(message, it->first, it->second);return;}
+	{PASS(message, it->second, mPwd, it->first);return;}
 	else if (line == "NICK" && it->second.getAuthentication())
-	{registerClientsNick(message, it->first, it->second);return;}
-	else if (line == "USER" && it->second.getAuthentication())
-	{registerClientsUser(message, it->first, it->second);return;}
+	{NICK(message, it->second, it->first, mClientList);return;}
+	else if (line == "USER" && it->second.getAuthentication() && it->second.getNiBool() && !it->second.getUsBool())
+	{USER(message, it->second, it->first, mClientList);return;}
 	else if (line == "QUIT")
 	{
-		std::cout << "Client " << ntohs(it->second.getPort()) << " disconnected" << std::endl;
-		close(it->first);
-		FD_CLR(it->first, &readfds);
-		mClientsList.erase(it);
-		return ;
+		if (kickClient(readfds, it->first, message, it->second.getUsername()))
+			mClientList.erase(it);
 	}
 	else {return;}
 }
 
-bool	Server::checkDuplicateNick(std::string nickname)
-{
-	for (std::map<int,Client>::iterator it = mClientsList.begin(); it != mClientsList.end(); it++)
-	{
-		if (!it->second.getNickname().empty() && it->second.getNickname() == nickname)
-			return true;
-	}
-	return false;
-}
-
-bool	Server::checkDuplicateUser(std::string username)
-{
-	for (std::map<int,Client>::iterator it = mClientsList.begin(); it != mClientsList.end(); it++)
-	{
-		if (!it->second.getUsername().empty() && it->second.getUsername() == username)
-			return true;
-	}
-	return false;
-}
-
-bool	Server::checkCharacter(char character)
-{
-	std::string	validCharacters("aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789");
-	
-	if (validCharacters.find(character) != std::string::npos)
-		return false;
-	else
-		return true;
-}
-
-bool	Server::checkCharactersValidity(std::string name)
-{
-	for (size_t index = 0; index < name.size(); index++)
-	{
-		if (checkCharacter(name[index]))
-			return true;
-	}
-	return false;
-}
-
-void    Server::authenticateClient(std::string msg, int fd, Client &Client)
-{
-    std::string password = msg.substr(msg.find(' ') + 1, msg.size());
-	if (password.find('\r') != std::string::npos)
-		password.erase(password.find('\r'), std::string::npos);
-	if (Client.getAuthentication() == true)
-	{
-		sendMessage(fd, "You're already authenticated");
-		return ;
-	}
-	if (password == mPwd)
-	{
-		Client.setAuthentication();
-		sendMessage(fd, "New client successfully authenticated\nNow please set a Nickname with 'NICK' and a Username with 'USER'");
-	}
-	else
-		sendMessage(fd, "Incorrect password");
-}
-
-void	Server::registerClientsNick(std::string msg, int fd, Client &Client)
-{
-	std::string name = msg.substr(msg.find(' ') + 1, msg.size());
-
-	if (name.find('\r') != std::string::npos)
-		name.erase(name.find('\r'), std::string::npos);
-	if (checkCharactersValidity(name))
-	{
-		sendMessage(fd, "Invalid name format");
-		return ;
-	}
-	if (!checkDuplicateNick(name))
-	{
-		Client.setNickname(name);
-	 	std::string	confirmation("Your nickname is set to "); confirmation.append(Client.getNickname());
-	 	sendMessage(fd, confirmation);
-	}
-	else
-		sendMessage(fd, "Nickname already taken");
-}
-
-void	Server::registerClientsUser(std::string msg, int fd, Client &Client)
-{
-	std::string name = msg.erase(0, msg.find(' ') + 1);
-
-	if (name.find(' ') != std::string::npos)
-		name.erase(name.find(' '), std::string::npos);
-	if (checkCharactersValidity(name))
-	{
-		sendMessage(fd, "Invalid name format");
-		return ;
-	}
-	if (!checkDuplicateUser(name))
-	{
-		Client.setUsername(name);
-	 	std::string	confirmation("Your username is set to "); confirmation.append(Client.getUsername());
-	 	sendMessage(fd, confirmation);
-	}
-	else
-		sendMessage(fd, "Username already taken");
-}
+////////////////////////////
+//		REGISTRATION	  //
+////////////////////////////
 
 //////////////////////////
 //		BUILDERS		//
