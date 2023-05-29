@@ -20,7 +20,4 @@ class JOIN: public ACmd
 
 		JOIN(void);
 		~JOIN(void);
-	private:
-		void	joinChan(Server *server, int clientSockfd, Client &clientData);
-		void	createChan(Server *server, int clientSockfd, Client &clientData);
 };

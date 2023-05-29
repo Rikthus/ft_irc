@@ -5,6 +5,53 @@
 //////**********************************//////
 
 //////////////////////////
+//		FUNCTIONS		//
+//////////////////////////
+
+bool	Channel::findInvite(int clientSockfd) const
+{
+	if (!mInviteOnly)
+		return (true);
+	for (unsigned long i = 0; i < mInvited.size(); i++)
+	{
+		if (mInvited[i] == clientSockfd)
+			return (true);
+	}
+	return (false);
+}
+
+bool	Channel::checkPwd(std::string key) const
+{
+	if (mPassProtected && key != mPwd)
+		return (false);
+	else if (!mPassProtected && key != NO_PWD)
+		return (false);
+	else
+		return (true);
+}
+
+bool	Channel::checkSpace(void) const
+{
+	if (mCapped && mClientList.size() == static_cast<unsigned long>(mMaxCapacity))
+		return (false);
+	else
+		return (true);
+}
+
+void	Channel::addClient(int clientSockfd, Client &clientData)
+{
+	if (mClientList.find(clientSockfd) != mClientList.end())
+	{
+		std::cout << "CLIENT ALREADY IN CHANNEL" << std::endl;
+		return ;
+	}
+	mClientList.insert(std::pair<int, Client &>(clientSockfd, clientData));
+	if (mCapped)
+		mMaxCapacity++;
+	std::cout << "ADDED TO CHAN" << std::endl;
+}
+
+//////////////////////////
 //		BUILDERS		//
 //////////////////////////
 
@@ -19,7 +66,7 @@ Channel::Channel(std::string chanName, int creatorSockfd, Client &creatorData, b
 	else
 	{
 		mPassProtected = false;
-		mPwd = "\0";
+		mPwd = NO_PWD;
 	}
 	mClientList.insert(std::pair<int, Client &>(mAdmin, creatorData));
 	mOperators.push_back(creatorSockfd);

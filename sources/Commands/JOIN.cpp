@@ -47,14 +47,34 @@ void	JOIN::execute(Server *server, int clientSockfd, Client &clientData, std::ve
 	{
 		if (i < keys.size())
 		{
-
+			if (server->findChannel(channels[i]))
+			{
+				if (server->chanAuthentication(channels[i], keys[i], clientSockfd))
+				{
+					server->joinChan(channels[i], clientSockfd, clientData);
+					std::cout << "TRY ADD TO CHAN " << channels[i] << std::endl;
+				}
+				else
+					std::cout << "BAD PASSORD AND/OR MISSING INVITATION AND/OR NO SPACE LEFT" << std::endl;
+			}
+			else
+				server->createChan(channels[i], clientSockfd, clientData, keys[i], true);
 		}
 		else
 		{
 			if (server->findChannel(channels[i]))
 			{
+				if (server->chanAuthentication(channels[i], NO_PWD, clientSockfd))
+				{
+					server->joinChan(channels[i], clientSockfd, clientData);
+					std::cout << "TRY ADD TO CHAN " << channels[i] << std::endl;
+				}
+				else
+					std::cout << "MISSING INVITATION OR NO SPACE LEFT" << std::endl;
 
 			}
+			else
+				server->createChan(channels[i], clientSockfd, clientData, NO_PWD, false);
 		}
 	}
 }

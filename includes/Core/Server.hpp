@@ -13,6 +13,10 @@ class Server
 
         void    	launch(void);
 		Channel 	*findChannel(std::string toFind);
+        bool		chanAuthentication(std::string channel, std::string pwd, int clientSockfd) const;
+
+		void	joinChan(std::string name, int clientSockfd, Client &clientData);
+		void	createChan(std::string name, int clientSockfd, Client &clientData, std::string pwd, bool isPwd);
 
         Server(char *port, char *pwd);
         ~Server(void);
