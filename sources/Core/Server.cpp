@@ -93,6 +93,13 @@ bool	Server::chanAuthentication(std::string channel, std::string pwd, int client
 	return (true);
 }
 
+// bool	Server::clientIsInChannel(int toFind, std::string channelName) const
+// {
+// 	constChannelIt	it = mChannelList.find(channelName);
+
+// 	// for ()
+// }
+
 void	Server::createChan(std::string name, int clientSockfd, Client &clientData, std::string pwd, bool isPwd)
 {
 	Channel	newChannel(name, clientSockfd, clientData, isPwd, pwd);

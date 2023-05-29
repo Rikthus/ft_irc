@@ -13,6 +13,8 @@ class Server
 
         void    	launch(void);
 		Channel 	*findChannel(std::string toFind);
+		bool		clientIsInChannel(int toFind, std::string channelName) const;
+		bool		clientIsOperator(int toFind, std::string channelName) const;
         bool		chanAuthentication(std::string channel, std::string pwd, int clientSockfd) const;
 
 		void	joinChan(std::string name, int clientSockfd, Client &clientData);

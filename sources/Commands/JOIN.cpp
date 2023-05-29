@@ -8,8 +8,6 @@ ACmd::~ACmd(void) {}
 
 void	JOIN::execute(Server *server, int clientSockfd, Client &clientData, std::vector<std::string> args)
 {
-	(void)clientSockfd;
-	(void)clientData;
 	std::vector<std::string>	channels;
 	std::vector<std::string>	keys;
 
@@ -71,7 +69,6 @@ void	JOIN::execute(Server *server, int clientSockfd, Client &clientData, std::ve
 				}
 				else
 					std::cout << "MISSING INVITATION OR NO SPACE LEFT" << std::endl;
-
 			}
 			else
 				server->createChan(channels[i], clientSockfd, clientData, NO_PWD, false);

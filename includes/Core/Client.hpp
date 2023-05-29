@@ -6,7 +6,7 @@
 /*   By: tulipe <tulipe@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 17:46:31 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/28 11:55:17 by tulipe           ###   ########lyon.fr   */
+/*   Updated: 2023/05/29 12:48:38 by tulipe           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ class Client
 };
 
 typedef std::map<int, Client>::iterator clientIt;
+typedef std::map<int, Client>::const_iterator constClientIt;
 
 // void 	error(const char *msg);
 // void	authenticateClient(std::string msg, int fd, ft::Client &Client);
