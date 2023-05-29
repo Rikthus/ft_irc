@@ -21,7 +21,7 @@ Channel::Channel(std::string chanName, int creatorSockfd, Client &creatorData, b
 		mPassProtected = false;
 		mPwd = "\0";
 	}
-	mClientList.insert(std::pair<int, Client &>(mAdmin, creatorData));
+	mClientList.insert(std::make_pair<int, Client*>(mAdmin, &creatorData));
 	mOperators.push_back(creatorSockfd);
 	mInviteOnly = false;
 	mCapped = false;

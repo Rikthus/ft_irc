@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tulipe <tulipe@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 18:11:17 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/28 11:54:56 by tulipe           ###   ########lyon.fr   */
+/*   Updated: 2023/05/29 13:32:16 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 class Channel
 {
-	typedef std::map<int, Client &> ClientData;
+	typedef std::map<int, Client *> ClientData;
 
 	public:
 

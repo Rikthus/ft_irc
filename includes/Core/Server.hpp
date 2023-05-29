@@ -14,11 +14,16 @@ class Server
         void    	launch(void);
 		Channel 	*findChannel(std::string toFind);
 
+        std::string getPwd() {return mPwd;}
+        fd_set  &getReadFds() {return readfds;}
+        std::map<int,Client>    &getClientList() {return mClientsList;}
+
         Server(char *port, char *pwd);
         ~Server(void);
 
     private:
 
+        fd_set                          readfds;
         std::string						mPwd;
         int								mServerPort;
         int								mSockfd;
@@ -27,6 +32,7 @@ class Server
         std::map<int,Client>			mClientsList;
 		std::map<std::string, Channel>	mChannelList;
 		std::map<std::string, ACmd *>	mCmdList;
+
 
         bool    portVerif(char *str) const;
 		void	initCommands(void);
@@ -37,11 +43,6 @@ class Server
 		void	authenticateClient(std::string msg, int fd, Client &Client);
 		void	registerClientsNick(std::string msg, int fd, Client &Client);
 		void	registerClientsUser(std::string msg, int fd, Client &Client);
-
-		bool	checkDuplicateNick(std::string nickname);
-		bool	checkDuplicateUser(std::string username);
-        bool    checkCharacter(char character);
-        bool    checkCharactersValidity(std::string name);
 
         std::vector<std::string>    splitCommand(std::string cmd);
 };

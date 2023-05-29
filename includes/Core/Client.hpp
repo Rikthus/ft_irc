@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tulipe <tulipe@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 17:46:31 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/28 11:55:17 by tulipe           ###   ########lyon.fr   */
+/*   Updated: 2023/05/28 14:15:26 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ class Client
             in_addr     getAddr() {return ClientAddr.sin_addr;}
             
             int         getPort() {return ClientAddr.sin_port;}
+            int         getFd() {return clifd;}
             bool        getAuthentication() {return isAuthenticated;}
             bool        getRegistration() {return isRegistered;}
             

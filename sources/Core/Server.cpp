@@ -10,18 +10,13 @@
 
 void    Server::launch(void)
 {
-    fd_set readfds;
-
-	FD_ZERO(&readfds);
-	FD_SET(mSockfd, &readfds);
-
 	while (1)
 	{
-		fd_set tmp_fds = readfds;
+		fd_set tmp_fds = this->readfds;
 		if (select(FD_SETSIZE, &tmp_fds, NULL, NULL, NULL) < 0)
 			throw(std::runtime_error("Error: select loop failed"));
 		if (FD_ISSET(mSockfd, &tmp_fds))
-		    newClient(readfds);
+		    newClient(this->readfds);
 		for (clientIt it = mClientsList.begin(); it != mClientsList.end(); it++)
 		{
 			if (FD_ISSET(it->first, &tmp_fds))
@@ -29,7 +24,7 @@ void    Server::launch(void)
 				char buffer[1024];
 				int num_bytes = recv(it->first, buffer, sizeof(buffer), 0);
 				buffer[num_bytes] = 0;
-				std::cout << buffer;
+				//dprintf(1, "%s\n", buffer);
 				if (num_bytes < 0)
 				{
 					std::cout << "recv failed" << std::endl;
@@ -39,7 +34,7 @@ void    Server::launch(void)
 				{
 					std::cout << "Client " << ntohs(it->second.getPort()) << " disconnected" << std::endl;
 					close(it->first);
-					FD_CLR(it->first, &readfds);
+					FD_CLR(it->first, &this->readfds);
 					mClientsList.erase(it);
 					break ;
 				} 
@@ -53,7 +48,7 @@ void    Server::launch(void)
 					{
 						std::istringstream stream(msg);
 						while (std::getline(stream, line, ' '))
-						    {applyCommand(line, msg, it, readfds);}
+						    {applyCommand(line, msg, it, this->readfds);}
 					}
 				}
 			}
@@ -78,6 +73,7 @@ Channel *Server::findChannel(std::string toFind)
 Server::Server(char *port, char *pwd) : mSockfd(socket(AF_INET, SOCK_STREAM, 0)), mOptval(1)
 {
     std::cout << "Server constructor engaged" << std::endl;
+	FD_ZERO(&readfds);FD_SET(mSockfd, &readfds);
     if (mSockfd < 0)
         throw(std::runtime_error("Error: socket attribution failed"));
     if (setsockopt(mSockfd, SOL_SOCKET, SO_REUSEPORT, &mOptval, sizeof(mOptval)) < 0)
@@ -98,23 +94,20 @@ Server::Server(char *port, char *pwd) : mSockfd(socket(AF_INET, SOCK_STREAM, 0))
 	{
         throw(std::runtime_error("Error: server launch failed"));
 	}
+
 	this->initCommands();
     std::cout << "Server is listening" << std::endl;
 }
 
 Server::~Server(void)
 {
-	std::map<std::string, ACmd *>::iterator	it;
+	std::cout << "Destructor called" << std::endl;
+	//std::map<std::string, ACmd *>::iterator	it = mCmdList.begin();
 
     if (mSockfd >= 0)
 	{
         close(mSockfd);
 	}
-	for (std::map<std::string, ACmd *>::iterator itt = mCmdList.begin(); itt != mCmdList.end(); itt++)
-	{	
-		//delete itt->second;
-	}
-	std::cout << "Destructor called" << std::endl;
 }
 
 
@@ -143,14 +136,25 @@ bool Server::portVerif(char *str)	const
 
 void	Server::initCommands(void)
 {
-	mCmdList.insert(std::pair<std::string, ACmd *>("JOIN", new JOIN()));
+	mCmdList["QUIT"] = new QUIT();
+	mCmdList["PASS"] = new PASS();
+	mCmdList["JOIN"] = new JOIN();
+	mCmdList["NICK"] = new NICK();
+	mCmdList["USER"] = new USER();
+	mCmdList["PRIVMSG"] = new PRIVMSG();
+	// mCmdList.insert(std::pair<std::string, ACmd *>("QUIT", new QUIT()));
+	// mCmdList.insert(std::pair<std::string, ACmd *>("PASS", new PASS()));
+	// mCmdList.insert(std::pair<std::string, ACmd *>("NICK", new NICK()));
+	// mCmdList.insert(std::pair<std::string, ACmd *>("USER", new USER()));
+	// mCmdList.insert(std::pair<std::string, ACmd *>("JOIN", new JOIN()));
+	// mCmdList.insert(std::pair<std::string, ACmd *>("PRIVMSG", new PRIVMSG()));
 }
 
 void Server::newClient(fd_set &readfds)
 {
 	Client	newClient;
 	int		newClientFd = accept(mSockfd, (struct sockaddr *) &newClient.getStruct(), &newClient.getClilen());
-
+	newClient.setClifd(newClientFd);
 	mClientsList.insert (std::pair<int,Client>(newClientFd,newClient));
 	FD_SET(newClientFd, &readfds);
 
@@ -162,25 +166,9 @@ void	Server::sendMessage(int fd, std::string message)
 
 void	Server::applyCommand(std::string line, std::string message, clientIt it, fd_set &readfds)
 {
+	(void) readfds;
 	std::map<std::string, ACmd *>::iterator	itCmd = mCmdList.find(line);
-
-	// if (itCmd == mCmdList.end())
-	// 	std::cout << "No Command found" << std::endl;
-	if (line == "PASS")
-	{authenticateClient(message, it->first, it->second);return;}
-	else if (line == "NICK" && it->second.getAuthentication())
-	{registerClientsNick(message, it->first, it->second);return;}
-	else if (line == "USER" && it->second.getAuthentication())
-	{registerClientsUser(message, it->first, it->second);return;}
-	else if (line == "QUIT")
-	{
-		std::cout << "Client " << ntohs(it->second.getPort()) << " disconnected" << std::endl;
-		close(it->first);
-		FD_CLR(it->first, &readfds);
-		mClientsList.erase(it);
-		return ;
-	}
-	else if (line == "JOIN")
+	if (itCmd != mCmdList.end())
 	{
 		std::vector<std::string>	args;
 		for (int i = 0; message[i]; i++)
@@ -191,96 +179,10 @@ void	Server::applyCommand(std::string line, std::string message, clientIt it, fd
 				message.erase(i--, 1);
 		}
 		args = splitCommand(message);
-		itCmd->second->execute(this, it->first, it->second, args);
+
+		itCmd->second->execute(this, it, args);
 		return ;
 	}
-}
-
-bool	Server::checkDuplicateNick(std::string nickname)
-{
-	for (std::map<int,Client>::iterator it = mClientsList.begin(); it != mClientsList.end(); it++)
-	{
-		if (!it->second.getNickname().empty() && it->second.getNickname() == nickname)
-			return true;
-	}
-	return false;
-}
-
-bool	Server::checkDuplicateUser(std::string username)
-{
-	for (std::map<int,Client>::iterator it = mClientsList.begin(); it != mClientsList.end(); it++)
-	{
-		if (!it->second.getUsername().empty() && it->second.getUsername() == username)
-			return true;
-	}
-	return false;
-}
-
-bool	Server::checkCharacter(char character)
-{
-	std::string	validCharacters("aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789");
-	
-	if (validCharacters.find(character) != std::string::npos)
-		return false;
-	else
-		return true;
-}
-
-bool	Server::checkCharactersValidity(std::string name)
-{
-	for (size_t index = 0; index < name.size(); index++)
-	{
-		if (checkCharacter(name[index]))
-			return true;
-	}
-	return false;
-}
-
-void    Server::authenticateClient(std::string msg, int fd, Client &Client)
-{
-    std::string password = msg.substr(msg.find(' ') + 1, msg.size());
-	if (password.find('\r') != std::string::npos)
-		password.erase(password.find('\r'), std::string::npos);
-	if (Client.getAuthentication() == true)
-		return ;
-	if (password == mPwd)
-		Client.setAuthentication();
-	else
-		sendMessage(fd, "Incorrect password");
-}
-
-void	Server::registerClientsNick(std::string msg, int fd, Client &Client)
-{
-	std::string name = msg.substr(msg.find(' ') + 1, msg.size());
-
-	if (name.find('\r') != std::string::npos)
-		name.erase(name.find('\r'), std::string::npos);
-	if (checkCharactersValidity(name))
-		return ;
-	if (!checkDuplicateNick(name))
-	{
-		Client.setNickname(name);
-	 	std::string	confirmation("Your nickname is set to "); confirmation.append(Client.getNickname());
-	}
-	else
-		sendMessage(fd, "Nickname already taken");
-}
-
-void	Server::registerClientsUser(std::string msg, int fd, Client &Client)
-{
-	std::string name = msg.erase(0, msg.find(' ') + 1);
-
-	if (name.find(' ') != std::string::npos)
-		name.erase(name.find(' '), std::string::npos);
-	if (checkCharactersValidity(name))
-		return ;
-	if (!checkDuplicateUser(name))
-	{
-		Client.setUsername(name);
-	 	std::string	confirmation("Your username is set to "); confirmation.append(Client.getUsername());
-	}
-	else
-		sendMessage(fd, "Username already taken");
 }
 
 std::vector<std::string>	Server::splitCommand(std::string cmd)

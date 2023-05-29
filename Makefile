@@ -4,7 +4,13 @@ LST_SRC :=	main \
 			Core/Server \
 			Core/Client \
 			Core/Channel \
-			Commands/JOIN
+			Core/Parsing \
+			Commands/JOIN \
+			Commands/QUIT \
+			Commands/PASS \
+			Commands/NICK \
+			Commands/USER \
+			Commands/PRIVMSG
 
 #update to match c or cpp
 CC := c++

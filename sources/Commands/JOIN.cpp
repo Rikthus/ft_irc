@@ -6,10 +6,9 @@ ACmd::~ACmd(void) {}
 
 //********************************  JOIN  ****************************////
 
-void	JOIN::execute(Server *server, int clientSockfd, Client &clientData, std::vector<std::string> args)
+void	JOIN::execute(Server *server, clientIt &iterator, std::vector<std::string> args)
 {
-	(void)clientSockfd;
-	(void)clientData;
+	(void) iterator;
 	std::vector<std::string>	channels;
 	std::vector<std::string>	keys;
 
