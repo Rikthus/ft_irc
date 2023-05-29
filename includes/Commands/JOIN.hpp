@@ -30,9 +30,6 @@ class JOIN: public ACmd
 		JOIN(void);
 		~JOIN(void);
 		void execute(Server *server, clientIt &iterator, std::vector<std::string> args);
-	private:
-		void	joinChan(Server *server, int clientSockfd, Client &clientData);
-		void	createChan(Server *server, int clientSockfd, Client &clientData);
 };
 
 class QUIT: public ACmd

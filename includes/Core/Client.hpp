@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
+/*   By: maxperei <maxperei@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 17:46:31 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/28 14:15:26 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/05/29 14:35:30 by maxperei         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ class Client
 };
 
 typedef std::map<int, Client>::iterator clientIt;
+typedef std::map<int, Client>::const_iterator constClientIt;
 
 // void 	error(const char *msg);
 // void	authenticateClient(std::string msg, int fd, ft::Client &Client);
