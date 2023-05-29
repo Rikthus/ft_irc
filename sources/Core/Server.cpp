@@ -66,6 +66,43 @@ Channel *Server::findChannel(std::string toFind)
 		return (NULL);
 }
 
+bool	Server::chanAuthentication(std::string channel, std::string pwd, int clientSockfd)	const
+{
+	constChannelIt	itChan = mChannelList.find(channel);
+
+	if (itChan->second.checkSpace() == false)
+	{
+		std::cout << "NO SPACE LEFT" << std::endl;
+		return (false);
+	}
+	else if (itChan->second.findInvite(clientSockfd) == false)
+	{
+		std::cout << "NOT INVITED" << std::endl;
+		return (false);
+	}
+	else if (itChan->second.checkPwd(pwd) == false)
+	{
+		std::cout << "BAD PWD OR NO PWD NEEDED" << std::endl;
+		return (false);
+	}
+	return (true);
+}
+
+void	Server::createChan(std::string name, int clientSockfd, Client &clientData, std::string pwd, bool isPwd)
+{
+	Channel	newChannel(name, clientSockfd, clientData, isPwd, pwd);
+
+	mChannelList.insert(std::pair<std::string, Channel>(name, newChannel));
+	for(channelIt it = mChannelList.begin(); it != mChannelList.end(); it++)
+		std::cout << it->first << std::endl;
+}
+
+void Server::joinChan(std::string name, int clientSockfd, Client &clientData)
+{
+	channelIt it = mChannelList.find(name);
+	it->second.addClient(clientSockfd, clientData);
+}
+
 //////////////////////////
 //      BUILDERS        //
 //////////////////////////
