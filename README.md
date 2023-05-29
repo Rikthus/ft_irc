@@ -53,3 +53,9 @@
  -	`PRIVMSG`	-> /query <target> <message to send> | The message will be displayed in a separate tab
  -	to access said tab -> /buffer <target>
  -	`NOTICE`	-> /notice <target> <message to send>
+ -	`JOIN`		-> /join #<channel_name>
+
+ ## ROADMAP PARSING
+
+ -	Numerical replies for various mistakes (NICK - USER - PASS)
+ -	PRIVMSG on channel

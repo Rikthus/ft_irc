@@ -6,11 +6,11 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:43:38 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/29 16:51:58 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/05/29 18:07:51 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/Commands/JOIN.hpp"
+#include "../../includes/Commands/Commands.hpp"
 
 bool	NICK::checkDuplicateNick(std::string nickname, std::map<int,Client> mClientList)
 {

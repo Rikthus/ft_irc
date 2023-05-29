@@ -6,11 +6,11 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 14:22:20 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/29 14:26:55 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/05/29 18:07:54 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/Commands/JOIN.hpp"
+#include "../../includes/Commands/Commands.hpp"
 
 int		NOTICE::findUser(std::map<int,Client> clientList, std::string name)
 {

@@ -6,11 +6,11 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 17:35:29 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/29 16:56:22 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/05/29 18:07:59 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/Commands/JOIN.hpp"
+#include "../../includes/Commands/Commands.hpp"
 
 int		PRIVMSG::findUser(std::map<int,Client> clientList, std::string name)
 {

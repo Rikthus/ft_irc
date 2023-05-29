@@ -6,11 +6,11 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:44:30 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/29 16:52:01 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/05/29 18:08:13 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/Commands/JOIN.hpp"
+#include "../../includes/Commands/Commands.hpp"
 
 bool	USER::checkDuplicateUser(std::string username, std::map<int,Client> mClientList)
 {
@@ -46,7 +46,7 @@ void	USER::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 	{
 		iterator->second.setUsername(username);
 		std::cout << username << " successfully registered." << std::endl;
-		std::string	confirmation = ":irc.project.com 001 "; confirmation.append(username); confirmation.append(" :Welcome to the Internet Relay Network!\r\n");
+		std::string	confirmation = ":irc.project.com 001 " + username + " :Welcome to the Internet Relay Network!\r\n";
 		send(iterator->first, confirmation.c_str(), confirmation.size(), 0);
 	}
 	else

@@ -6,23 +6,23 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:44:05 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/29 16:51:12 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/05/29 18:08:03 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/Commands/JOIN.hpp"
+#include "../../includes/Commands/Commands.hpp"
 
 void	PASS::execute(Server *server, clientIt &iterator, std::vector<std::string> args)
 {
 	if (args.size() != 2)
 	{
-		send(iterator->first, "Invalid use of PASS\n", 21, 0);
+		send(iterator->first, "Invalid use of PASS\r\n", 22, 0);
 		return ;
 	}
 	std::string	password = args[1];
 	if (iterator->second.getAuthentication() == true)
 	{
-		send(iterator->first, "You're already authenticated\n", 30, 0);
+		send(iterator->first, "You're already authenticated\r\n", 31, 0);
 		return ;
 	}
 	if (password == server->getPwd())

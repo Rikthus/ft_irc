@@ -3,7 +3,7 @@
 # include "ft_irc.hpp"
 # include "Channel.hpp"
 # include "Client.hpp"
-# include "../Commands/JOIN.hpp"
+# include "../Commands/Commands.hpp"
 
 class ACmd;
 

@@ -6,11 +6,11 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:44:25 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/29 14:46:55 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/05/29 18:08:15 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/Commands/JOIN.hpp"
+#include "../../includes/Commands/Commands.hpp"
 
 void	QUIT::execute(Server *server, clientIt &iterator, std::vector<std::string> args)
 {
