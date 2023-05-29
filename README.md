@@ -47,5 +47,9 @@
 
  ## WeeChat specific commands
 
- -	`PRIVMSG` -> /query <recipient> <message to send> | The message will be displayed in a separate tab
- -	
+ -	To create a server -> /server add <server_name> 127.0.0.1/6667 -password=3333 (needs to be specified in the case of the project)
+ -	To connect to the server -> /connect <server_name>
+
+ -	`PRIVMSG`	-> /query <target> <message to send> | The message will be displayed in a separate tab
+ -	to access said tab -> /buffer <target>
+ -	`NOTICE`	-> /notice <target> <message to send>

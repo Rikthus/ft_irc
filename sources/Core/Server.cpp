@@ -24,7 +24,7 @@ void    Server::launch(void)
 				char buffer[1024];
 				int num_bytes = recv(it->first, buffer, sizeof(buffer), 0);
 				buffer[num_bytes] = 0;
-				//dprintf(1, "%s\n", buffer);
+				dprintf(1, "%s\n", buffer);
 				if (num_bytes < 0)
 				{
 					std::cout << "recv failed" << std::endl;

@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:43:38 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/28 16:43:32 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/05/29 16:51:58 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,11 @@ bool	NICK::checkDuplicateNick(std::string nickname, std::map<int,Client> mClient
 
 void	NICK::execute(Server *server, clientIt &iterator, std::vector<std::string> args)
 {
+	if (!iterator->second.getAuthentication())
+	{
+		//send(iterator->first, "You need to enter the password before trying to register\n", 58, 0);
+		return ;
+	}
 	if (args.size() != 2)
 	{
 		send(iterator->first, "Invalid use of NICK\n", 21, 0);
@@ -40,7 +45,10 @@ void	NICK::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 	if (!checkDuplicateNick(name, server->getClientList()))
 		iterator->second.setNickname(name);
 	else
-		send(iterator->first, "Nickname already taken\n", 24, 0);
+	{
+		std::string	error("Nickname already taken (" + name + ")\r\n");
+		send(iterator->first, error.c_str(), error.size(), 0);
+	}
 }
 
 NICK::NICK()

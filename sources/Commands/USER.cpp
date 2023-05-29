@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:44:30 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/28 17:03:22 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/05/29 16:52:01 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,11 @@ bool	USER::checkDuplicateUser(std::string username, std::map<int,Client> mClient
 
 void	USER::execute(Server *server, clientIt &iterator, std::vector<std::string> args)
 {
+	if (!iterator->second.getAuthentication())
+	{
+		//send(iterator->first, "You need to enter the password before trying to register\n", 58, 0);
+		return ;
+	}
 	if (args.size() != 5)
 	{
 		send(iterator->first, "Invalid use of USER\n", 21, 0);
@@ -45,7 +50,10 @@ void	USER::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 		send(iterator->first, confirmation.c_str(), confirmation.size(), 0);
 	}
 	else
-		send(iterator->first, "Nickname already taken\n", 24, 0);
+	{
+		std::string	error("Username already taken (" + username + ")\r\n");
+		send(iterator->first, error.c_str(), error.size(), 0);
+	}
 }
 
 USER::USER()
