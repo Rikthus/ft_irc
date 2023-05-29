@@ -44,3 +44,8 @@
  - `class Channel`
  - `class Client`
  - a specific class for each command (eg: `class Join`)
+
+ ## WeeChat specific commands
+
+ -	`PRIVMSG` -> /query <recipient> <message to send> | The message will be displayed in a separate tab
+ -	

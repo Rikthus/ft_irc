@@ -10,7 +10,8 @@ LST_SRC :=	main \
 			Commands/PASS \
 			Commands/NICK \
 			Commands/USER \
-			Commands/PRIVMSG
+			Commands/PRIVMSG \
+			Commands/NOTICE
 
 #update to match c or cpp
 CC := c++

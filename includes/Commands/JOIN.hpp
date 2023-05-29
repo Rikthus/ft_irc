@@ -82,5 +82,17 @@ class PRIVMSG: public ACmd
 		const		std::string type;
 };
 
+class NOTICE: public ACmd
+{
+	public:
+		NOTICE();
+		~NOTICE();
+		int		findUser(std::map<int,Client> clientList, std::string name);
+		void	execute(Server *server, clientIt &iterator, std::vector<std::string> args);
+
+	private:
+		const		std::string type;
+};
+
 bool    checkCharacter(char character);
 bool    checkCharactersValidity(std::string name);

@@ -142,6 +142,7 @@ void	Server::initCommands(void)
 	mCmdList["NICK"] = new NICK();
 	mCmdList["USER"] = new USER();
 	mCmdList["PRIVMSG"] = new PRIVMSG();
+	mCmdList["NOTICE"] = new NOTICE();
 	// mCmdList.insert(std::pair<std::string, ACmd *>("QUIT", new QUIT()));
 	// mCmdList.insert(std::pair<std::string, ACmd *>("PASS", new PASS()));
 	// mCmdList.insert(std::pair<std::string, ACmd *>("NICK", new NICK()));
