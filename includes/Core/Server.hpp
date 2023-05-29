@@ -1,6 +1,7 @@
 #pragma once
 
 # include "ft_irc.hpp"
+# include "RPL.hpp"
 # include "Channel.hpp"
 # include "Client.hpp"
 # include "../Commands/Commands.hpp"
