@@ -48,6 +48,11 @@ void	Channel::addClient(int clientSockfd, Client &clientData)
 	mClientList.insert(std::pair<int, Client &>(clientSockfd, clientData));
 	if (mCapped)
 		mMaxCapacity++;
+	for (std::vector<int>::iterator it; it != mInvited.end(); it++)
+	{
+		if (*it == clientSockfd)
+			mInvited.erase(it);
+	}
 	std::cout << "ADDED TO CHAN" << std::endl;
 }
 
