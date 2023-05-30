@@ -91,5 +91,21 @@ class NOTICE: public ACmd
 		const		std::string type;
 };
 
+class MODE: public ACmd
+{
+	public:
+		MODE();
+		~MODE();
+		void	execute(Server *server, clientIt &iterator, std::vector<std::string> args);
+};
+
+class TOPIC: public ACmd
+{
+	public:
+		TOPIC();
+		~TOPIC();
+		void	execute(Server *server, clientIt &iterator, std::vector<std::string> args);
+};
+
 bool    checkCharacter(char character);
 bool    checkCharactersValidity(std::string name);

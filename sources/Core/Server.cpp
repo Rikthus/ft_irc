@@ -66,26 +66,46 @@ Channel *Server::findChannel(std::string toFind)
 		return (NULL);
 }
 
-bool	Server::chanAuthentication(std::string channel, std::string pwd, int clientSockfd)	const
+bool	Server::chanAuthentication(std::string channel, std::string pwd, int clientSockfd, std::string clientNick)	const
 {
 	constChannelIt	itChan = mChannelList.find(channel);
 
 	if (itChan->second.checkSpace() == false)
 	{
-		std::cout << "NO SPACE LEFT" << std::endl;
+		Rep().E471(clientSockfd, clientNick, channel);
 		return (false);
 	}
 	else if (itChan->second.findInvite(clientSockfd) == false)
 	{
-		std::cout << "NOT INVITED" << std::endl;
+		Rep().E473(clientSockfd, clientNick, channel);
 		return (false);
 	}
 	else if (itChan->second.checkPwd(pwd) == false)
 	{
-		std::cout << "BAD PWD OR NO PWD NEEDED" << std::endl;
+		Rep().E475(clientSockfd, clientNick, channel);
 		return (false);
 	}
 	return (true);
+}
+
+bool	Server::chanModeIsSet(int mode, std::string chanName) const
+{
+	constChannelIt	it = mChannelList.find(chanName);
+
+	switch (mode)
+	{
+		case TOPIC_PROTECTED:
+			return (it->second.getTopicProtected());
+		case PASS_PROTECTED:
+			return (it->second.getPassProtected());
+		case INVITE_ONLY:
+			return (it->second.getInviteOnly());
+		case CAPPED:
+			return (it->second.getCapped());
+		case TOPIC_SET:
+			return (it->second.getTopicSet());
+	}
+	return (false);
 }
 
 void	Server::createChan(std::string name, int clientSockfd, Client &clientData, std::string pwd, bool isPwd)
@@ -217,7 +237,6 @@ void	Server::applyCommand(std::string line, std::string message, clientIt it, fd
 				message.erase(i--, 1);
 		}
 		args = splitCommand(message);
-
 		itCmd->second->execute(this, it, args);
 		return ;
 	}

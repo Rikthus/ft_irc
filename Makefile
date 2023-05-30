@@ -4,6 +4,7 @@ LST_SRC :=	main \
 			Core/Server \
 			Core/Client \
 			Core/Channel \
+			Core/RPL \
 			Core/Parsing \
 			Commands/JOIN \
 			Commands/QUIT \
