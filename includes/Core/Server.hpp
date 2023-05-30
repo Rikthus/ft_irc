@@ -25,6 +25,7 @@ class Server
         std::string getPwd() {return mPwd;}
         fd_set  &getReadFds() {return readfds;}
         std::map<int,Client>    &getClientList() {return mClientsList;}
+        std::map<std::string,Channel> &getChannelList() {return mChannelList;}
 
         Server(char *port, char *pwd);
         ~Server(void);

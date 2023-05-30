@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:44:30 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/29 18:08:13 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/05/30 16:27:11 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,23 +31,27 @@ void	USER::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 	}
 	if (args.size() != 5)
 	{
-		send(iterator->first, "Invalid use of USER\n", 21, 0);
+		send(iterator->first, "Invalid use of USER\r\n", 22, 0);
 		return ;
 	}
 	std::string	username = args[1];
 	if (checkCharactersValidity(username))
 	{
 		std::string	error = ":irc.project.com 432 :Erroneous ";
-		error.append(username += '\n');
+		error.append(username += "\r\n");
 		send(iterator->first, error.c_str(), error.size(), 0);
-		return ;
+		return ; 
 	}
 	if (!checkDuplicateUser(username, server->getClientList()))
 	{
+		Rep	tmp;
 		iterator->second.setUsername(username);
 		std::cout << username << " successfully registered." << std::endl;
-		std::string	confirmation = ":irc.project.com 001 " + username + " :Welcome to the Internet Relay Network!\r\n";
-		send(iterator->first, confirmation.c_str(), confirmation.size(), 0);
+		Rep().R001(iterator->first, username);
+		Rep().R002(iterator->first, username, "*irc de la rue zebi 😂👌*", "0.42");
+		Rep().R003(iterator->first, username, "on a monday");
+		Rep().R004(iterator->first, username);
+		
 	}
 	else
 	{

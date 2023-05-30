@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maxperei <maxperei@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 18:11:17 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/29 14:50:14 by maxperei         ###   ########lyon.fr   */
+/*   Updated: 2023/05/30 17:26:45 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,9 @@ class Channel
 		bool	checkPwd(std::string key) const;
 		bool	checkSpace(void) const;
 		void	addClient(int clientSockfd, Client &clientData);
+
+		std::string	getName() {return mName;}
+		ClientData	getClientList() {return mClientList;}
 
 		Channel(std::string chanName, int creatorSockfd, Client &creatorData, bool isPwd, std::string pwd);
 		~Channel(void);

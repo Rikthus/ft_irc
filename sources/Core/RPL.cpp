@@ -8,7 +8,7 @@ int	send_to_user(std::string msg, int sockfd)
 Rep::Rep() {}
 
 void Rep::send_to_client(std::string msg, int const &fd) {
-	msg = ":" + std::string("IRC_EZ") + " " + msg +"\r\n";
+	msg = ":" + std::string("irc.project.com") + " " + msg +"\r\n";
 	if (send_to_user(msg, fd) == -1)
 		throw ;
 
@@ -63,7 +63,7 @@ void Rep::R004(int const &fd, const std::string &cNick)
 {
 	/* User modes https://www.rfc-editor.org/rfc/rfc2812#section-3.1.5 */
 	/* Channel modes https://www.rfc-editor.org/rfc/rfc2811#section-4 */
-	output << "004 " << cNick << " 42ircserv 1.0 " << CHANNELMODE_CHARLIST << " " << USERMODE_CHARLIST;
+	output << "004 " << cNick << " :`the best irc project wallah` 0.42 " << CHANNELMODE_CHARLIST << " " << USERMODE_CHARLIST;
 	send_to_client(output.str(), fd);
 	clearBuffer();
 }
@@ -318,7 +318,7 @@ void Rep::R321(int const &fd, const std::string &cNick)
  * @param serverName 
  * @param serverInfo 
  */
-void	Rep::R322(int const &fd, const std::string &cNick, int nuser, const std::string& topic, const std::string& chanName)
+void	Rep::R322(int const &fd, const std::string &cNick, unsigned int nuser, const std::string& topic, const std::string& chanName)
 {
 	output << "322 " << cNick << " " << chanName << " " << nuser << " :" << topic;
 	send_to_client(output.str(), fd);

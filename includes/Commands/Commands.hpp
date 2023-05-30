@@ -72,8 +72,9 @@ class PRIVMSG: public ACmd
 	public:
 		PRIVMSG();
 		~PRIVMSG();
-		int		findUser(std::map<int,Client> clientList, std::string name);
-		void	execute(Server *server, clientIt &iterator, std::vector<std::string> args);
+		int			findUser(std::map<int,Client> mClientList, std::string name);
+		std::vector<int>	findChannel(std::map<std::string, Channel>	mChannelList, std::string name);
+		void		execute(Server *server, clientIt &iterator, std::vector<std::string> args);
 
 	private:
 		const		std::string type;
@@ -85,6 +86,17 @@ class NOTICE: public ACmd
 		NOTICE();
 		~NOTICE();
 		int		findUser(std::map<int,Client> clientList, std::string name);
+		void	execute(Server *server, clientIt &iterator, std::vector<std::string> args);
+
+	private:
+		const		std::string type;
+};
+
+class LIST: public ACmd
+{
+	public:
+		LIST();
+		~LIST();
 		void	execute(Server *server, clientIt &iterator, std::vector<std::string> args);
 
 	private:

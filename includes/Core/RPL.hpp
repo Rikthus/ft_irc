@@ -21,7 +21,8 @@ class Rep
 		void R002(NR_ARG, const std::string& servName, const std::string &servVersion);
 		void R003(NR_ARG, const std::string& date);
 		void R004(NR_ARG);
-
+		// ^^ Welcome ^^
+	
 		void R211(NR_ARG, const std::string& infostr); //RPL_STATSLINKINFO
 		void R212(NR_ARG, const std::string& infostr); //RPL_STATSCOMMANDS
 		void R219(NR_ARG, const std::string& letters); //RPL_ENDOFSTATS
@@ -43,7 +44,7 @@ class Rep
 		void R318(NR_ARG, const std::string& queryList);
 		void R319(NR_ARG, const std::string& queryNick, char prefix, const std::string& chanName);
 		void R321(int const &fd, const std::string &cNick);
-		void R322(NR_ARG, int nuser, const std::string& topic, const std::string& ChanName);
+		void R322(NR_ARG, unsigned int nuser, const std::string& topic, const std::string& ChanName);
 		void R323(NR_ARG);
 
 		void R324(NR_ARG, const std::string& chanName, const std::string& chanModeStr, const std::string& chanModeArgs);
