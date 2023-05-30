@@ -55,6 +55,23 @@ void	Channel::addClient(int clientSockfd, Client &clientData)
 	}
 }
 
+void	Channel::addInvitation(int isInvited)
+{
+	mInvited.push_back(isInvited);
+}
+
+bool	Channel::clientIsInChan(std::string clientName) const
+{
+	std::map<int, Client *>::const_iterator	it;
+
+	for (it = mClientList.begin(); it != mClientList.end(); it++)
+	{
+		if (it->second->getNickname() == clientName)
+			return (true);
+	}
+	return (false);
+}
+
 void	Channel::rplTopic(void)
 {
 	std::map<int, Client *>::iterator	it;

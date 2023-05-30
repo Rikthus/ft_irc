@@ -104,7 +104,23 @@ class TOPIC: public ACmd
 	public:
 		TOPIC();
 		~TOPIC();
-		void	execute(Server *server, clientIt &iterator, std::vector<std::string> args);
+		void	execute(Server *server, clientIt &it, std::vector<std::string> args);
+};
+
+class KICK: public ACmd
+{
+	public:
+		KICK();
+		~KICK();
+		void	execute(Server *server, clientIt &it, std::vector<std::string> args);
+};
+
+class INVITE: public ACmd
+{
+	public:
+		INVITE();
+		~INVITE();
+		void	execute(Server *server, clientIt &it, std::vector<std::string> args);
 };
 
 bool    checkCharacter(char character);

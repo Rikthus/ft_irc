@@ -108,6 +108,18 @@ bool	Server::chanModeIsSet(int mode, std::string chanName) const
 	return (false);
 }
 
+int	Server::findNickSockfd(std::string nick)
+{
+	clientIt	it;
+
+	for(it = mClientsList.begin(); it != mClientsList.end(); it++)
+	{
+		if (it->second.getNickname() == nick)
+			return (it->second.getFd());
+	}
+	return (-1);
+}
+
 void	Server::createChan(std::string name, int clientSockfd, Client &clientData, std::string pwd, bool isPwd)
 {
 	Channel	newChannel(name, clientSockfd, clientData, isPwd, pwd);

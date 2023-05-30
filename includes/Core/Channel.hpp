@@ -6,7 +6,7 @@
 /*   By: tulipe <tulipe@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 18:11:17 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/30 12:27:56 by tulipe           ###   ########lyon.fr   */
+/*   Updated: 2023/05/30 14:57:44 by tulipe           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,12 @@ class Channel
 
 	public:
 		
-
 		bool	findInvite(int clientSockfd) const;
 		bool	checkPwd(std::string key) const;
 		bool	checkSpace(void) const;
+		bool	clientIsInChan(std::string clientName) const;
 		void	addClient(int clientSockfd, Client &clientData);
+		void	addInvitation(int isInvited);
 
 		void	rplTopic(void);
 
