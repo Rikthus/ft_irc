@@ -21,11 +21,15 @@ class Server
 
 		void	    joinChan(std::string name, int clientSockfd, Client &clientData);
 		void	    createChan(std::string name, int clientSockfd, Client &clientData, std::string pwd, bool isPwd);
+        void        setBotFd(int fd) {this->botFd = fd;}
 
+        int         getFd() {return mSockfd;}
+        int         getBotFd() {return botFd;}
         std::string getPwd() {return mPwd;}
-        fd_set  &getReadFds() {return readfds;}
-        std::map<int,Client>    &getClientList() {return mClientsList;}
-        std::map<std::string,Channel> &getChannelList() {return mChannelList;}
+        std::string getSpecialPwd() {return mSpecialPwd;}
+        fd_set      &getReadFds() {return readfds;}
+        std::map<int,Client>			&getClientList() {return mClientsList;}
+        std::map<std::string,Channel>	&getChannelList() {return mChannelList;}
 
         Server(char *port, char *pwd);
         ~Server(void);
@@ -33,10 +37,12 @@ class Server
     private:
 
         fd_set                          readfds;
-        std::string						mPwd;
-        int								mServerPort;
         int								mSockfd;
+        std::string						mPwd;
         int								mOptval;
+        std::string                     mSpecialPwd;
+        int								mServerPort;
+        int                             botFd;
         struct	sockaddr_in				mServAddr;
         std::map<int,Client>			mClientsList;
 		std::map<std::string, Channel>	mChannelList;
@@ -53,5 +59,8 @@ class Server
 		void	registerClientsNick(std::string msg, int fd, Client &Client);
 		void	registerClientsUser(std::string msg, int fd, Client &Client);
 
-        std::vector<std::string>    splitCommand(std::string cmd);
+        void    findCulprit(std::map<std::string,int>::iterator it);
+       
+	    std::map<std::string,int>	parseBotMessage(char *message);
+        std::vector<std::string>	splitCommand(std::string cmd);
 };

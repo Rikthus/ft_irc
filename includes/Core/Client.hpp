@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maxperei <maxperei@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 17:46:31 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/29 14:35:30 by maxperei         ###   ########lyon.fr   */
+/*   Updated: 2023/05/31 17:15:03 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,15 +30,19 @@ class Client
             int         getFd() {return clifd;}
             bool        getAuthentication() {return isAuthenticated;}
             bool        getRegistration() {return isRegistered;}
+            bool        getIsBot() {return isBot;}
             
             void        setClifd(int &fd) {this->clifd = fd;}
             void        setAuthentication() {this->isAuthenticated = true;}
             void        setRegistration() {this->isRegistered = true;}
             void        setNickname(std::string name) {this->nickname = name;}
             void        setUsername(std::string name) {this->username = name;}
+            void        setBotBool() {this->isBot = true;}
+            void        addWarns(int amount) {this->warns += amount;}
             
             std::string getNickname() {return nickname;}
             std::string getUsername() {return username;}
+            int         getWarnLevel() {return warns;}
             
         private:
             std::string         nickname;
@@ -46,6 +50,8 @@ class Client
             std::string         buffer;
             bool                isAuthenticated;
             bool                isRegistered;
+            int                 warns;
+            bool                isBot;
             struct sockaddr_in  ClientAddr;
             socklen_t           clilen;
             int                 clifd;

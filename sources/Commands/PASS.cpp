@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:44:05 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/29 18:08:03 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/05/31 17:18:45 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,13 @@ void	PASS::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 	}
 	if (password == server->getPwd())
 		iterator->second.setAuthentication();
+	else if (password == server->getSpecialPwd())
+	{
+		iterator->second.setAuthentication();
+		iterator->second.setBotBool();
+	}
 	else
-		send(iterator->first, ":irc.project.com 464 :Incorrect password\r\n", 26, 0);
+		send(iterator->first, ":irc.project.com 464 :Incorrect password\r\n", 43, 0);
 
 }
 

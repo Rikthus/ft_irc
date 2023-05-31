@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 17:35:29 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/30 18:14:59 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/05/31 13:31:19 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,20 @@ std::vector<int>	PRIVMSG::findChannel(std::map<std::string, Channel>	mChannelLis
 		}
 	}
 	return fdList;
+}
+
+std::string itoa(int a)
+{
+    std::string ss="";   //create empty string
+    while(a)
+    {
+        int	x = a % 10;
+        a /= 10;
+        char	i = '0';
+        i = i + x;
+        ss = i + ss;      //append new character at the front of the string!
+    }
+    return ss;
 }
 
 void	PRIVMSG::execute(Server *server, clientIt &iterator, std::vector<std::string> args)
@@ -81,6 +95,8 @@ void	PRIVMSG::execute(Server *server, clientIt &iterator, std::vector<std::strin
 		}
 	}
 	std::cout << iterator->second.getNickname() << " sent a private message to " << args[1] << std::endl;
+	std::string	messageToBot = "[FROM]_" + iterator->second.getNickname() + ": " + message + "\r\n";
+	send(server->getBotFd(), messageToBot.c_str(), messageToBot.size(), SOCK_STREAM);
 }
 
 PRIVMSG::PRIVMSG()

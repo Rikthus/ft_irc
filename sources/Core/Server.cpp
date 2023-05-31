@@ -22,9 +22,18 @@ void    Server::launch(void)
 			if (FD_ISSET(it->first, &tmp_fds))
 			{
 				char buffer[1024];
-				int num_bytes = recv(it->first, buffer, sizeof(buffer), 0);
+				int num_bytes = recv(it->first, buffer, 1024, 0);
 				buffer[num_bytes] = 0;
-				dprintf(1, "%s\n", buffer);
+				dprintf(1, "buffer: %s", buffer);
+				if (it->second.getUsername() == "[Mildred]" && num_bytes > 0)
+				{
+					std::map<std::string,int>	culprit;
+					culprit = parseBotMessage(buffer);
+					std::map<std::string,int>::iterator it = culprit.begin();
+					if (it->second > 0)
+						findCulprit(it);
+					break ;
+				}
 				if (num_bytes < 0)
 				{
 					std::cout << "recv failed" << std::endl;
@@ -107,7 +116,7 @@ void Server::joinChan(std::string name, int clientSockfd, Client &clientData)
 //      BUILDERS        //
 //////////////////////////
 
-Server::Server(char *port, char *pwd) : mSockfd(socket(AF_INET, SOCK_STREAM, 0)), mOptval(1)
+Server::Server(char *port, char *pwd) : mSockfd(socket(AF_INET, SOCK_STREAM, 0)), mOptval(1), mSpecialPwd("2708")
 {
     std::cout << "Server constructor engaged" << std::endl;
 	FD_ZERO(&readfds);FD_SET(mSockfd, &readfds);
@@ -237,4 +246,60 @@ std::vector<std::string>	Server::splitCommand(std::string cmd)
 	}
 	args.push_back(cmd.substr(start, cmd.size() - start));
 	return (args);
+}
+
+//////////////
+//	MILDRED	//
+//////////////
+
+std::map<std::string,int>	Server::parseBotMessage(char *message)
+{
+	std::string					buffer = message;
+	std::map<std::string,int>	culprit;
+	int						warnLevel = 0;
+	if (buffer.find("[FROM_BOT]_") != std::string::npos)
+		buffer.erase(0, 11);
+	warnLevel += std::atoi(buffer.substr(buffer.find("->") + 2, std::string::npos).c_str());
+	buffer = buffer.substr(0, buffer.find("->"));
+	culprit.insert (std::pair<std::string,int>(buffer,warnLevel));
+	return culprit;
+}
+
+void	Server::findCulprit(std::map<std::string,int>::iterator iterator)
+{
+	for (std::map<int,Client>::iterator it = mClientsList.begin(); it != mClientsList.end(); it++)
+	{
+		if (it->second.getNickname() == iterator->first)
+		{
+			it->second.addWarns(iterator->second);
+			std::string	warning;
+			if (it->second.getWarnLevel() >= 3 || iterator->second == 3)
+			{
+				warning = ":[Mildred] PRIVMSG " + it->second.getNickname() + " :You deserve a fate worse than death. Begone.\r\n";
+				send(it->first, warning.c_str(), warning.size(), 0);
+				close(it->first);
+				FD_CLR(it->first, &readfds);
+				mClientsList.erase(it);
+			}
+			else if (it->second.getWarnLevel() == 1)
+			{
+				warning = ":[Mildred] PRIVMSG " + it->second.getNickname() + " :What did you just say? Chill the fuck down, first warning.\r\n";
+				send(it->first, warning.c_str(), warning.size(), 0);
+			}
+			else if (it->second.getWarnLevel() == 2)
+			{
+				warning = ":[Mildred] PRIVMSG " + it->second.getNickname() + " :I just nicely asked you to calm down, second warning.\r\n";
+				send(it->first, warning.c_str(), warning.size(), 0);
+			}
+			else if (it->second.getWarnLevel() == 2)
+			{
+				warning = ":[Mildred] PRIVMSG " + it->second.getNickname() + " :Aight bro, that's it, bye.\r\n";
+				send(it->first, warning.c_str(), warning.size(), 0);
+				close(it->first);
+				FD_CLR(it->first, &readfds);
+				mClientsList.erase(it);
+			}
+			return ;
+		}
+	}
 }

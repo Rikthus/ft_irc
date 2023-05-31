@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:43:38 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/29 18:07:51 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/05/31 17:11:48 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	NICK::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 		return ;
 	}
 	std::string name = args[1];
-	if (checkCharactersValidity(name))
+	if (checkCharactersValidity(name) && !iterator->second.getIsBot())
 	{
 		std::string	error = ":irc.project.com 432 :Erroneous ";
 		error.append(name += '\n');

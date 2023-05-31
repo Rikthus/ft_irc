@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:44:30 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/30 16:27:11 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/05/31 17:12:28 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void	USER::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 {
 	if (!iterator->second.getAuthentication())
 	{
-		//send(iterator->first, "You need to enter the password before trying to register\n", 58, 0);
 		return ;
 	}
 	if (args.size() != 5)
@@ -35,7 +34,7 @@ void	USER::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 		return ;
 	}
 	std::string	username = args[1];
-	if (checkCharactersValidity(username))
+	if (checkCharactersValidity(username) && !iterator->second.getIsBot())
 	{
 		std::string	error = ":irc.project.com 432 :Erroneous ";
 		error.append(username += "\r\n");
@@ -44,8 +43,9 @@ void	USER::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 	}
 	if (!checkDuplicateUser(username, server->getClientList()))
 	{
-		Rep	tmp;
 		iterator->second.setUsername(username);
+		if (username == "[Mildred]")
+			server->setBotFd(iterator->first);
 		std::cout << username << " successfully registered." << std::endl;
 		Rep().R001(iterator->first, username);
 		Rep().R002(iterator->first, username, "*irc de la rue zebi 😂👌*", "0.42");

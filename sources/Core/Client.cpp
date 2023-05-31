@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tulipe <tulipe@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 11:06:26 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/27 23:16:24 by tulipe           ###   ########lyon.fr   */
+/*   Updated: 2023/05/31 17:08:37 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/Core/Client.hpp"
 
-Client::Client() : isAuthenticated(0), isRegistered(0)
+Client::Client() : isAuthenticated(0), isRegistered(0), warns(0), isBot(false)
 {
 	clilen = sizeof(this->ClientAddr);
 }
