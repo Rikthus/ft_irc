@@ -68,6 +68,7 @@ void	JOIN::execute(Server *server, clientIt &it, std::vector<std::string> args)
 			else
 			{
 				server->createChan(channels[i], it->first, it->second, keys[i], true);
+				Rep().send_to_client("MODE " + channels[i] + " +k " + keys[i], it->first);
 				std::string	addr = ":" + it->second.getNickname() + "!" + it->second.getUsername() + "@" + inet_ntoa(it->second.getAddr()) + " JOIN " + channels[i] + "\r\n";
 				send(it->first, addr.c_str(), addr.size(), 0);
 				(server->findChannel(channels[i]))->setOperator(true, it->second.getNickname());

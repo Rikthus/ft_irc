@@ -253,6 +253,8 @@ void Server::newClient(fd_set &readfds)
 {
 	Client	newClient;
 	int		newClientFd = accept(mSockfd, (struct sockaddr *) &newClient.getStruct(), &newClient.getClilen());
+	if (newClientFd == -1)
+		throw(std::runtime_error("Error: cannot accept new client connection"));
 	newClient.setClifd(newClientFd);
 	mClientsList.insert (std::pair<int,Client>(newClientFd,newClient));
 	FD_SET(newClientFd, &readfds);
