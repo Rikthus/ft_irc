@@ -6,7 +6,7 @@
 /*   By: tulipe <tulipe@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 18:11:17 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/30 14:57:44 by tulipe           ###   ########lyon.fr   */
+/*   Updated: 2023/05/31 15:53:57 by tulipe           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,9 @@ class Channel
 		bool	findInvite(int clientSockfd) const;
 		bool	checkPwd(std::string key) const;
 		bool	checkSpace(void) const;
+		bool	sockClientIsInChan(int clientSockfd);
 		bool	clientIsInChan(std::string clientName) const;
+		bool	sockClientIsOperator(int clientSockfd);
 		void	addClient(int clientSockfd, Client &clientData);
 		void	addInvitation(int isInvited);
 
@@ -46,12 +48,14 @@ class Channel
 		bool	getCapped(void) const;
 		bool	getTopicSet(void) const;
 		std::string	getTopic(void) const;
+		std::string	getMods(void);
 
 		void	setTopicProtected(bool mode);
 		void	setPass(bool mode, std::string newPass);
 		void	setInviteOnly(bool mode);
 		void	setCapped(bool mode, unsigned int newSize);
 		void	setTopic(bool mode, std::string newTopic);
+		int		setOperator(bool mode, std::string nick);
 
 		Channel(std::string chanName, int creatorSockfd, Client &creatorData, bool isPwd, std::string pwd);
 		~Channel(void);

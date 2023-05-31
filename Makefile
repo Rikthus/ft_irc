@@ -6,13 +6,17 @@ LST_SRC :=	main \
 			Core/Channel \
 			Core/RPL \
 			Core/Parsing \
+			Commands/INVITE \
 			Commands/JOIN \
-			Commands/QUIT \
-			Commands/PASS \
+			Commands/KICK \
+			Commands/MODE \
 			Commands/NICK \
-			Commands/USER \
+			Commands/NOTICE \
+			Commands/PASS \
 			Commands/PRIVMSG \
-			Commands/NOTICE
+			Commands/QUIT \
+			Commands/TOPIC \
+			Commands/USER
 
 #update to match c or cpp
 CC := c++

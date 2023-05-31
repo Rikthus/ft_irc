@@ -91,14 +91,6 @@ class NOTICE: public ACmd
 		const		std::string type;
 };
 
-class MODE: public ACmd
-{
-	public:
-		MODE();
-		~MODE();
-		void	execute(Server *server, clientIt &iterator, std::vector<std::string> args);
-};
-
 class TOPIC: public ACmd
 {
 	public:
@@ -120,6 +112,14 @@ class INVITE: public ACmd
 	public:
 		INVITE();
 		~INVITE();
+		void	execute(Server *server, clientIt &it, std::vector<std::string> args);
+};
+
+class MODE: public ACmd
+{
+	public:
+		MODE();
+		~MODE();
 		void	execute(Server *server, clientIt &it, std::vector<std::string> args);
 };
 

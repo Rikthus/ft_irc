@@ -103,6 +103,7 @@ void	JOIN::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 				server->createChan(channels[i], iterator->first, iterator->second, NO_PWD, false);
 				std::string	confirmation;
 				std::string	addr = ":" + iterator->second.getNickname() + "!" + iterator->second.getUsername() + "@" + inet_ntoa(iterator->second.getAddr()) + " JOIN " + channels[i] + "\r\n";
+				Rep().send_to_client("MODE " + channels[i] + " +o " + iterator->second.getNickname(), iterator->first);
 				send(iterator->first, addr.c_str(), addr.size(), 0);
 				confirmation = ":irc.project.com 353 " + iterator->second.getNickname() + " " + channels[i] + " :" + iterator->second.getNickname() + "\r\n";
 				send(iterator->first, confirmation.c_str(), confirmation.size(), 0);

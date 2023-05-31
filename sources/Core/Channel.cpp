@@ -60,6 +60,17 @@ void	Channel::addInvitation(int isInvited)
 	mInvited.push_back(isInvited);
 }
 
+bool	Channel::sockClientIsInChan(int clientSockfd)
+{
+	std::map<int, Client *>::iterator	it;
+
+	it = mClientList.find(clientSockfd);
+	if (it != mClientList.end())
+		return (true);
+	else
+		return (false);
+}
+
 bool	Channel::clientIsInChan(std::string clientName) const
 {
 	std::map<int, Client *>::const_iterator	it;
@@ -67,6 +78,16 @@ bool	Channel::clientIsInChan(std::string clientName) const
 	for (it = mClientList.begin(); it != mClientList.end(); it++)
 	{
 		if (it->second->getNickname() == clientName)
+			return (true);
+	}
+	return (false);
+}
+
+bool	Channel::sockClientIsOperator(int clientSockfd)
+{
+	for (unsigned long i = 0; i < mOperators.size(); i++)
+	{
+		if (mOperators[i] == clientSockfd)
 			return (true);
 	}
 	return (false);
@@ -119,6 +140,24 @@ bool	Channel::getInviteOnly(void) const {return (mInviteOnly);}
 bool	Channel::getCapped(void) const {return (mCapped);}
 bool	Channel::getTopicSet(void) const {return (mTopicSet);}
 std::string	Channel::getTopic(void) const {return (mTopic);}
+
+std::string	Channel::getMods(void)
+{
+	std::string	ret;
+
+	ret.append("+");
+	if (mTopicProtected)
+		ret.append("t");
+	if (mPassProtected)
+		ret.append("k");
+	if (mInviteOnly)
+		ret.append("i");
+	if (mCapped)
+		ret.append("l");
+	if (ret.size() == 1)
+		ret = "\0";
+	return (ret);
+}
 
 //////////////////////
 //		SETTERS		//
@@ -180,6 +219,33 @@ void	Channel::setTopic(bool mode, std::string newTopic)
 		mTopic = "\0";
 		mTopicSet = false;
 	}
+}
+
+int	Channel::setOperator(bool mode, std::string nick)
+{
+	std::map<int, Client *>::iterator	it;
+	int									userSockfd;
+
+	for (it = mClientList.begin(); it != mClientList.end(); it++)
+	{
+		if (it->second->getNickname() == nick)
+			break ;
+	};
+	if (it == mClientList.end())
+		return (-1);
+	userSockfd = it->second->getFd();
+	for (std::vector<int>::iterator itVec = mOperators.begin(); itVec != mOperators.end(); itVec++)
+	{
+		if (*itVec == userSockfd)
+		{
+			if (mode == false)
+				mOperators.erase(itVec);
+			return (0);
+		}
+	}
+	if (mode == true)
+		mOperators.push_back(userSockfd);
+	return (0);
 }
 
 //////**********************************//////

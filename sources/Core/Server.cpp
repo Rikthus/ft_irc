@@ -66,6 +66,38 @@ Channel *Server::findChannel(std::string toFind)
 		return (NULL);
 }
 
+bool	Server::clientIsInChannel(int toFind, std::string channelName)
+{
+	channelIt	it;
+	std::map<int, Client *>::iterator	itMap;
+	Channel			*chan;
+
+	it = mChannelList.find(channelName);
+	if (it == mChannelList.end())
+		return (false);
+	chan = this->findChannel(channelName);
+	if (chan->sockClientIsInChan(toFind))
+		return (true);
+	else
+		return (false);
+}
+
+bool	Server::clientIsOperator(int toFind, std::string channelName)
+{
+	channelIt	it;
+	std::map<int, Client *>::iterator	itMap;
+	Channel			*chan;
+
+	it = mChannelList.find(channelName);
+	if (it == mChannelList.end())
+		return (false);
+	chan = this->findChannel(channelName);
+	if (chan->sockClientIsOperator(toFind))
+		return (true);
+	else
+		return (false);
+}
+
 bool	Server::chanAuthentication(std::string channel, std::string pwd, int clientSockfd, std::string clientNick)	const
 {
 	constChannelIt	itChan = mChannelList.find(channel);
@@ -205,13 +237,17 @@ bool Server::portVerif(char *str)	const
 
 void	Server::initCommands(void)
 {
-	mCmdList["QUIT"] = new QUIT();
-	mCmdList["PASS"] = new PASS();
+	mCmdList["INVITE"] = new INVITE();
 	mCmdList["JOIN"] = new JOIN();
+	mCmdList["KICK"] = new KICK();
+	mCmdList["MODE"] = new MODE();
 	mCmdList["NICK"] = new NICK();
-	mCmdList["USER"] = new USER();
-	mCmdList["PRIVMSG"] = new PRIVMSG();
 	mCmdList["NOTICE"] = new NOTICE();
+	mCmdList["PASS"] = new PASS();
+	mCmdList["PRIVMSG"] = new PRIVMSG();
+	mCmdList["QUIT"] = new QUIT();
+	mCmdList["TOPIC"] = new TOPIC();
+	mCmdList["USER"] = new USER();
 	// mCmdList.insert(std::pair<std::string, ACmd *>("QUIT", new QUIT()));
 	// mCmdList.insert(std::pair<std::string, ACmd *>("PASS", new PASS()));
 	// mCmdList.insert(std::pair<std::string, ACmd *>("NICK", new NICK()));

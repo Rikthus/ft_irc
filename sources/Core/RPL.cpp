@@ -10,7 +10,7 @@ Rep::Rep() {}
 void Rep::send_to_client(std::string msg, int const &fd) {
 	msg = ":" + std::string("IRC_EZ") + " " + msg +"\r\n";
 	if (send_to_user(msg, fd) == -1)
-		throw ;
+		throw(std::runtime_error("Error: send function failed"));
 
 	//cout << ANSI::gray << "{send} => " << ANSI::purple << msg << endl;
 }
