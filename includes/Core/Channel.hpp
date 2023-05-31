@@ -6,7 +6,7 @@
 /*   By: tulipe <tulipe@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 18:11:17 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/31 15:53:57 by tulipe           ###   ########lyon.fr   */
+/*   Updated: 2023/05/31 20:45:29 by tulipe           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ class Channel
 	typedef std::map<int, Client *> ClientData;
 
 	public:
+
+		ClientData  		mClientList;
 		
 		bool	findInvite(int clientSockfd) const;
 		bool	checkPwd(std::string key) const;
@@ -63,7 +65,6 @@ class Channel
 	private:
 		std::string 		mName;
 		int					mAdmin;
-		ClientData  		mClientList;
 		std::vector<int>	mOperators;
 		std::vector<int>	mInvited;
 		std::string			mPwd;

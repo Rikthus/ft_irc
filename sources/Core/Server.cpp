@@ -19,6 +19,7 @@ void    Server::launch(void)
 		    newClient(this->readfds);
 		for (clientIt it = mClientsList.begin(); it != mClientsList.end(); it++)
 		{
+			int	tmpSockfd = it->first;
 			if (FD_ISSET(it->first, &tmp_fds))
 			{
 				char buffer[1024];
@@ -52,7 +53,7 @@ void    Server::launch(void)
 					}
 				}
 			}
-			if (read(it->first, NULL, 0) == -1)break; 
+			if (read(tmpSockfd, NULL, 0) == -1)break; 
 		}
 	}
 }
@@ -157,8 +158,6 @@ void	Server::createChan(std::string name, int clientSockfd, Client &clientData, 
 	Channel	newChannel(name, clientSockfd, clientData, isPwd, pwd);
 
 	mChannelList.insert(std::pair<std::string, Channel>(name, newChannel));
-	for(channelIt it = mChannelList.begin(); it != mChannelList.end(); it++)
-		std::cout << it->first << std::endl;
 }
 
 void Server::joinChan(std::string name, int clientSockfd, Client &clientData)
@@ -248,12 +247,6 @@ void	Server::initCommands(void)
 	mCmdList["QUIT"] = new QUIT();
 	mCmdList["TOPIC"] = new TOPIC();
 	mCmdList["USER"] = new USER();
-	// mCmdList.insert(std::pair<std::string, ACmd *>("QUIT", new QUIT()));
-	// mCmdList.insert(std::pair<std::string, ACmd *>("PASS", new PASS()));
-	// mCmdList.insert(std::pair<std::string, ACmd *>("NICK", new NICK()));
-	// mCmdList.insert(std::pair<std::string, ACmd *>("USER", new USER()));
-	// mCmdList.insert(std::pair<std::string, ACmd *>("JOIN", new JOIN()));
-	// mCmdList.insert(std::pair<std::string, ACmd *>("PRIVMSG", new PRIVMSG()));
 }
 
 void Server::newClient(fd_set &readfds)

@@ -5,14 +5,24 @@ int	send_to_user(std::string msg, int sockfd)
 	return (send(sockfd, msg.c_str(), msg.size(), 0));
 }
 
+
 Rep::Rep() {}
 
-void Rep::send_to_client(std::string msg, int const &fd) {
+void Rep::send_to_client(std::string msg, int const &fd) 
+{
 	msg = ":" + std::string("IRC_EZ") + " " + msg +"\r\n";
 	if (send_to_user(msg, fd) == -1)
 		throw(std::runtime_error("Error: send function failed"));
 
 	//cout << ANSI::gray << "{send} => " << ANSI::purple << msg << endl;
+}
+
+void Rep::send_to_channel(std::string msg, Channel *chan)
+{
+	std::map<int, Client *>::iterator	it;
+
+	for (it = chan->mClientList.begin(); it != chan->mClientList.end(); it++)
+		send(it->first, msg.c_str(), msg.size(), 0);
 }
 
 /**

@@ -41,14 +41,11 @@ bool	Channel::checkSpace(void) const
 void	Channel::addClient(int clientSockfd, Client &clientData)
 {
 	if (mClientList.find(clientSockfd) != mClientList.end())
-	{
-		std::cout << "CLIENT ALREADY IN CHANNEL" << std::endl;
 		return ;
-	}
 	mClientList.insert(std::pair<int, Client *>(clientSockfd, &clientData));
 	if (mCapped)
 		mMaxCapacity++;
-	for (std::vector<int>::iterator it; it != mInvited.end(); it++)
+	for (std::vector<int>::iterator it = mInvited.begin(); it != mInvited.end(); it++)
 	{
 		if (*it == clientSockfd)
 			mInvited.erase(it);

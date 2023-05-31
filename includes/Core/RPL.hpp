@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ft_irc.hpp"
+#include "Channel.hpp"
 
 #include <ctime>
 #include <sstream>
@@ -9,13 +10,16 @@
 #define CHANNELMODE_CHARLIST "ositnmlbvk" //est utilisée pour définir une liste de caractères qui représentent les modes de canal dans un réseau IRC
 #define NR_ARG int const &fd, const std::string& cNick
 
+class Channel;
+
 class Rep
 {
 	private:
 		std::stringstream	output;
 	public:
 		Rep();
-		void send_to_client(std::string msg, int const &fd);
+		void	send_to_client(std::string msg, int const &fd);
+		void	send_to_channel(std::string msg, Channel *chan);
 		
 				/* ----- Replies ----- */
 		void R001(NR_ARG);

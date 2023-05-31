@@ -25,7 +25,7 @@ HEADER_EXT := .hpp
 CPPFLAGS := -std=c++98
 
 #update if needed
-CFLAGS = -Wall -Wextra -Werror -MD -I$(DIR_INC) #-fsanitize=address -g3
+CFLAGS = -Wall -Wextra -Werror -MD -I$(DIR_INC) -fsanitize=address -g3
 DIR_SRC := sources#.
 SUB_DIR_LST := Core Commands
 
