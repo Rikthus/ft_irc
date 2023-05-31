@@ -6,59 +6,7 @@ ACmd::~ACmd(void) {}
 
 //********************************  JOIN  ****************************////
 
-// void	JOIN::execute(Server *server, clientIt &iterator, std::vector<std::string> args)
-// {
-// 	(void) iterator;
-// 	std::vector<std::string>	channels;
-// 	std::vector<std::string>	keys;
-
-// 	int		nbChan = 0;
-// 	int		nbKey = 0;
-// 	bool	possibleChan = true;
-// 	bool	possibleKey = false;
-
-// 	std::cout << "JOINED" << std::endl;
-// 	for (unsigned long i = 1; i < args.size(); i++)
-// 	{
-// 		if (possibleChan && args[i].size() > 1 && args[i][0] == '#' && keys.size() == 0)
-// 		{
-// 			channels.push_back(args[i]);
-// 			nbChan++;
-// 			possibleKey = true;
-// 		}
-// 		else if (args[i].size() < 2 && (!possibleKey || args[i][0] == '#'))
-// 		{
-// 			std::cout << "BAD FORMAT" << std::endl;
-// 			return ;
-// 		}
-// 		else if (possibleKey && nbKey < nbChan)
-// 		{
-// 			keys.push_back(args[i]);
-// 			nbKey++;
-// 		}
-// 		else
-// 		{
-// 			std::cout << "BAD FORMAT" << std::endl;
-// 			return ;
-// 		}
-// 	}
-// 	for (unsigned long i = 0; i < channels.size(); i++)
-// 	{
-// 		if (i < keys.size())
-// 		{
-
-// 		}
-// 		else
-// 		{
-// 			if (server->findChannel(channels[i]))
-// 			{
-
-// 			}
-// 		}
-// 	}
-// }
-
-void	JOIN::execute(Server *server, clientIt &iterator, std::vector<std::string> args)
+void	JOIN::execute(Server *server, clientIt &it, std::vector<std::string> args)
 {
 	std::vector<std::string>	channels;
 	std::vector<std::string>	keys;
@@ -68,7 +16,11 @@ void	JOIN::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 	bool	possibleChan = true;
 	bool	possibleKey = false;
 
-	std::cout << "JOINED" << std::endl;
+	if (args.size() < 2)
+	{
+		Rep().E461(it->first, it->second.getNickname(), "JOIN");
+		return ;
+	}
 	for (unsigned long i = 1; i < args.size(); i++)
 	{
 		if (possibleChan && args[i].size() > 1 && args[i][0] == '#' && keys.size() == 0)
@@ -79,7 +31,7 @@ void	JOIN::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 		}
 		else if (args[i].size() < 2 && (!possibleKey || args[i][0] == '#'))
 		{
-			std::cout << "BAD FORMAT" << std::endl;
+			Rep().E476(it->first, args[i]);
 			return ;
 		}
 		else if (possibleKey && nbKey < nbChan)
@@ -89,7 +41,7 @@ void	JOIN::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 		}
 		else
 		{
-			std::cout << "BAD FORMAT" << std::endl;
+			Rep().E476(it->first, args[i]);
 			return ;
 		}
 	}
@@ -99,51 +51,57 @@ void	JOIN::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 		{
 			if (server->findChannel(channels[i]))
 			{
-				if (server->chanAuthentication(channels[i], keys[i], iterator->first))
+				if (server->chanAuthentication(channels[i], keys[i], it->first, it->second.getNickname()))
 				{
-					server->joinChan(channels[i], iterator->first, iterator->second);
-					std::cout << "TRY ADD TO CHAN " << channels[i] << std::endl;
-					std::string	addr = ":" + iterator->second.getNickname() + "!" + iterator->second.getUsername() + "@" + inet_ntoa(iterator->second.getAddr()) + " JOIN " + channels[i] + "\r\n";
-					send(iterator->first, addr.c_str(), addr.size(), 0);
+					server->joinChan(channels[i], it->first, it->second);
+					std::string	confirmation;
+					std::string	addr = ":" + it->second.getNickname() + "!" + it->second.getUsername() + "@" + inet_ntoa(it->second.getAddr()) + " JOIN " + channels[i] + "\r\n";
+					send(it->first, addr.c_str(), addr.size(), 0);
+					Channel *chan = server->findChannel(channels[i]);
+					if (chan->getTopicSet())
+						Rep().R332(it->first, it->second.getNickname(), channels[i], chan->getTopic());
+					confirmation = ":irc.project.com 353 " + it->second.getNickname() + " " + channels[i] + " :" + it->second.getNickname() + "\r\n";
+					Rep().send_to_channel(confirmation, chan);
+					Rep().R366(it->first, it->second.getNickname(), channels[i]);
 				}
-				else
-					std::cout << "BAD PASSORD AND/OR MISSING INVITATION AND/OR NO SPACE LEFT" << std::endl;
 			}
 			else
 			{
-				server->createChan(channels[i], iterator->first, iterator->second, keys[i], true);
-				std::string	confirmation;
-				confirmation = "JOIN " + channels[i] + "\r\n";
-				std::cout << "USING SEND\n";
-				send(iterator->first, confirmation.c_str(), confirmation.size(), 0);
+				Channel	*chan = server->findChannel(channels[i]);
+				server->createChan(channels[i], it->first, it->second, keys[i], true);
+				chan->setPass(true, keys[i]);
+				Rep().send_to_client("MODE " + channels[i] + " +k " + keys[i], it->first);
+				std::string	addr = ":" + it->second.getNickname() + "!" + it->second.getUsername() + "@" + inet_ntoa(it->second.getAddr()) + " JOIN " + channels[i] + "\r\n";
+				send(it->first, addr.c_str(), addr.size(), 0);
+				(server->findChannel(channels[i]))->setOperator(true, it->second.getNickname());
+				Rep().send_to_client("MODE " + channels[i] + " +o " + it->second.getNickname(), it->first);
 			}
 		}
 		else
 		{
 			if (server->findChannel(channels[i]))
 			{
-				if (server->chanAuthentication(channels[i], NO_PWD, iterator->first))
+				if (server->chanAuthentication(channels[i], NO_PWD, it->first, it->second.getNickname()))
 				{
-					server->joinChan(channels[i], iterator->first, iterator->second);
-					std::cout << "TRY ADD TO CHAN " << channels[i] << std::endl;
-					std::string	addr = ":" + iterator->second.getNickname() + "!" + iterator->second.getUsername() + "@" + inet_ntoa(iterator->second.getAddr()) + " JOIN " + channels[i] + "\r\n";
-					send(iterator->first, addr.c_str(), addr.size(), 0);
+					server->joinChan(channels[i], it->first, it->second);
+					std::string	confirmation;
+					std::string	addr = ":" + it->second.getNickname() + "!" + it->second.getUsername() + "@" + inet_ntoa(it->second.getAddr()) + " JOIN " + channels[i] + "\r\n";
+					send(it->first, addr.c_str(), addr.size(), 0);
+					Channel *chan = server->findChannel(channels[i]);
+					if (chan->getTopicSet())
+						Rep().R332(it->first, it->second.getNickname(), channels[i], chan->getTopic());
+					confirmation = ":irc.project.com 353 " + it->second.getNickname() + " " + channels[i] + " :" + it->second.getNickname() + "\r\n";
+					Rep().send_to_channel(confirmation, chan);
+					Rep().R366(it->first, it->second.getNickname(), channels[i]);	
 				}
-				else
-					std::cout << "MISSING INVITATION OR NO SPACE LEFT" << std::endl;
 			}
 			else
 			{
-				server->createChan(channels[i], iterator->first, iterator->second, NO_PWD, false);
-				// std::string	confirmation;
-				std::string	addr = ":" + iterator->second.getNickname() + "!" + iterator->second.getUsername() + "@" + inet_ntoa(iterator->second.getAddr()) + " JOIN " + channels[i] + "\r\n";
-				send(iterator->first, addr.c_str(), addr.size(), 0);
-				// confirmation = ":irc.project.com 353 " + iterator->second.getNickname() + " " + channels[i] + " :" + iterator->second.getNickname() + "\r\n";
-				// send(iterator->first, confirmation.c_str(), confirmation.size(), 0);
-				// confirmation = ":irc.project.com 366 " + iterator->second.getNickname() + " " + channels[i] + " :End of /NAMES list.\r\n";
-				// send(iterator->first, confirmation.c_str(), confirmation.size(), 0);
-				Rep().R353(iterator->first, args[1], channels[i], args[1], 'u', 'o');
-				Rep().R366(iterator->first, args[1], channels[i]);
+				server->createChan(channels[i], it->first, it->second, NO_PWD, false);
+				std::string	addr = ":" + it->second.getNickname() + "!" + it->second.getUsername() + "@" + inet_ntoa(it->second.getAddr()) + " JOIN " + channels[i] + "\r\n";
+				send(it->first, addr.c_str(), addr.size(), 0);
+				(server->findChannel(channels[i]))->setOperator(true, it->second.getNickname());
+				Rep().send_to_client("MODE " + channels[i] + " +o " + it->second.getNickname(), it->first);
 			}
 		}
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
+/*   By: tulipe <tulipe@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 18:11:17 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/30 17:26:45 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/06/01 00:57:15 by tulipe           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,16 @@
 
 # include "ft_irc.hpp"
 # include "Client.hpp"
+# include "RPL.hpp"
 
 # define NO_PWD "\0"
+# define TOPIC_PROTECTED 0
+# define PASS_PROTECTED 1
+# define INVITE_ONLY 2
+# define CAPPED 3
+# define TOPIC_SET 4
+
+# define MAX_CHAN_CAPACITY 30
 
 class Channel
 {
@@ -23,10 +31,33 @@ class Channel
 
 	public:
 
+		ClientData  		mClientList;
+		
 		bool	findInvite(int clientSockfd) const;
 		bool	checkPwd(std::string key) const;
 		bool	checkSpace(void) const;
+		bool	sockClientIsInChan(int clientSockfd);
+		bool	clientIsInChan(std::string clientName) const;
+		bool	sockClientIsOperator(int clientSockfd);
 		void	addClient(int clientSockfd, Client &clientData);
+		void	addInvitation(int isInvited);
+
+		void	rplTopic(void);
+
+		bool	getTopicProtected(void) const;
+		bool	getPassProtected(void) const;
+		bool	getInviteOnly(void) const;
+		bool	getCapped(void) const;
+		bool	getTopicSet(void) const;
+		std::string	getTopic(void) const;
+		std::string	getMods(void);
+
+		void	setTopicProtected(bool mode);
+		void	setPass(bool mode, std::string newPass);
+		void	setInviteOnly(bool mode);
+		void	setCapped(bool mode, unsigned int newSize);
+		void	setTopic(bool mode, std::string newTopic);
+		int		setOperator(bool mode, std::string nick);
 
 		std::string	getName() {return mName;}
 		ClientData	getClientList() {return mClientList;}
@@ -37,15 +68,17 @@ class Channel
 	private:
 		std::string 		mName;
 		int					mAdmin;
-		ClientData  		mClientList;
 		std::vector<int>	mOperators;
 		std::vector<int>	mInvited;
 		std::string			mPwd;
+		std::string			mTopic;
 
+		bool		mTopicProtected;
 		bool		mPassProtected;
 		bool		mInviteOnly;
 		bool		mCapped;
-		int			mMaxCapacity;
+		bool		mTopicSet;
+		unsigned int	mMaxCapacity;
 };
 
 typedef std::map<std::string, Channel>::iterator channelIt;

@@ -19,6 +19,7 @@ void    Server::launch(void)
 		    newClient(this->readfds);
 		for (clientIt it = mClientsList.begin(); it != mClientsList.end(); it++)
 		{
+			int	tmpSockfd = it->first;
 			if (FD_ISSET(it->first, &tmp_fds))
 			{
 				char buffer[1024];
@@ -61,7 +62,7 @@ void    Server::launch(void)
 					}
 				}
 			}
-			if (read(it->first, NULL, 0) == -1)break; 
+			if (read(tmpSockfd, NULL, 0) == -1)break; 
 		}
 	}
 }
@@ -75,26 +76,90 @@ Channel *Server::findChannel(std::string toFind)
 		return (NULL);
 }
 
-bool	Server::chanAuthentication(std::string channel, std::string pwd, int clientSockfd)	const
+bool	Server::clientIsInChannel(int toFind, std::string channelName)
+{
+	channelIt	it;
+	std::map<int, Client *>::iterator	itMap;
+	Channel			*chan;
+
+	it = mChannelList.find(channelName);
+	if (it == mChannelList.end())
+		return (false);
+	chan = this->findChannel(channelName);
+	if (chan->sockClientIsInChan(toFind))
+		return (true);
+	else
+		return (false);
+}
+
+bool	Server::clientIsOperator(int toFind, std::string channelName)
+{
+	channelIt	it;
+	std::map<int, Client *>::iterator	itMap;
+	Channel			*chan;
+
+	it = mChannelList.find(channelName);
+	if (it == mChannelList.end())
+		return (false);
+	chan = this->findChannel(channelName);
+	if (chan->sockClientIsOperator(toFind))
+		return (true);
+	else
+		return (false);
+}
+
+bool	Server::chanAuthentication(std::string channel, std::string pwd, int clientSockfd, std::string clientNick)	const
 {
 	constChannelIt	itChan = mChannelList.find(channel);
 
 	if (itChan->second.checkSpace() == false)
 	{
-		std::cout << "NO SPACE LEFT" << std::endl;
+		Rep().E471(clientSockfd, clientNick, channel);
 		return (false);
 	}
 	else if (itChan->second.findInvite(clientSockfd) == false)
 	{
-		std::cout << "NOT INVITED" << std::endl;
+		Rep().E473(clientSockfd, clientNick, channel);
 		return (false);
 	}
 	else if (itChan->second.checkPwd(pwd) == false)
 	{
-		std::cout << "BAD PWD OR NO PWD NEEDED" << std::endl;
+		Rep().E475(clientSockfd, clientNick, channel);
 		return (false);
 	}
 	return (true);
+}
+
+bool	Server::chanModeIsSet(int mode, std::string chanName) const
+{
+	constChannelIt	it = mChannelList.find(chanName);
+
+	switch (mode)
+	{
+		case TOPIC_PROTECTED:
+			return (it->second.getTopicProtected());
+		case PASS_PROTECTED:
+			return (it->second.getPassProtected());
+		case INVITE_ONLY:
+			return (it->second.getInviteOnly());
+		case CAPPED:
+			return (it->second.getCapped());
+		case TOPIC_SET:
+			return (it->second.getTopicSet());
+	}
+	return (false);
+}
+
+int	Server::findNickSockfd(std::string nick)
+{
+	clientIt	it;
+
+	for(it = mClientsList.begin(); it != mClientsList.end(); it++)
+	{
+		if (it->second.getNickname() == nick)
+			return (it->second.getFd());
+	}
+	return (-1);
 }
 
 void	Server::createChan(std::string name, int clientSockfd, Client &clientData, std::string pwd, bool isPwd)
@@ -102,8 +167,6 @@ void	Server::createChan(std::string name, int clientSockfd, Client &clientData, 
 	Channel	newChannel(name, clientSockfd, clientData, isPwd, pwd);
 
 	mChannelList.insert(std::pair<std::string, Channel>(name, newChannel));
-	for(channelIt it = mChannelList.begin(); it != mChannelList.end(); it++)
-		std::cout << it->first << std::endl;
 }
 
 void Server::joinChan(std::string name, int clientSockfd, Client &clientData)
@@ -182,25 +245,25 @@ bool Server::portVerif(char *str)	const
 
 void	Server::initCommands(void)
 {
-	mCmdList["QUIT"] = new QUIT();
-	mCmdList["PASS"] = new PASS();
+	mCmdList["INVITE"] = new INVITE();
 	mCmdList["JOIN"] = new JOIN();
+	mCmdList["KICK"] = new KICK();
+	mCmdList["MODE"] = new MODE();
 	mCmdList["NICK"] = new NICK();
-	mCmdList["USER"] = new USER();
-	mCmdList["PRIVMSG"] = new PRIVMSG();
 	mCmdList["NOTICE"] = new NOTICE();
-	// mCmdList.insert(std::pair<std::string, ACmd *>("QUIT", new QUIT()));
-	// mCmdList.insert(std::pair<std::string, ACmd *>("PASS", new PASS()));
-	// mCmdList.insert(std::pair<std::string, ACmd *>("NICK", new NICK()));
-	// mCmdList.insert(std::pair<std::string, ACmd *>("USER", new USER()));
-	// mCmdList.insert(std::pair<std::string, ACmd *>("JOIN", new JOIN()));
-	// mCmdList.insert(std::pair<std::string, ACmd *>("PRIVMSG", new PRIVMSG()));
+	mCmdList["PASS"] = new PASS();
+	mCmdList["PRIVMSG"] = new PRIVMSG();
+	mCmdList["QUIT"] = new QUIT();
+	mCmdList["TOPIC"] = new TOPIC();
+	mCmdList["USER"] = new USER();
 }
 
 void Server::newClient(fd_set &readfds)
 {
 	Client	newClient;
 	int		newClientFd = accept(mSockfd, (struct sockaddr *) &newClient.getStruct(), &newClient.getClilen());
+	if (newClientFd == -1)
+		throw(std::runtime_error("Error: cannot accept new client connection"));
 	newClient.setClifd(newClientFd);
 	mClientsList.insert (std::pair<int,Client>(newClientFd,newClient));
 	FD_SET(newClientFd, &readfds);
@@ -226,7 +289,6 @@ void	Server::applyCommand(std::string line, std::string message, clientIt it, fd
 				message.erase(i--, 1);
 		}
 		args = splitCommand(message);
-
 		itCmd->second->execute(this, it, args);
 		return ;
 	}

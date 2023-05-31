@@ -4,15 +4,19 @@ LST_SRC :=	main \
 			Core/Server \
 			Core/Client \
 			Core/Channel \
-			Core/Parsing \
 			Core/RPL \
+			Core/Parsing \
+			Commands/INVITE \
 			Commands/JOIN \
-			Commands/QUIT \
-			Commands/PASS \
+			Commands/KICK \
+			Commands/MODE \
 			Commands/NICK \
-			Commands/USER \
+			Commands/NOTICE \
+			Commands/PASS \
 			Commands/PRIVMSG \
-			Commands/NOTICE
+			Commands/QUIT \
+			Commands/TOPIC \
+			Commands/USER
 
 #update to match c or cpp
 CC := c++
@@ -21,7 +25,7 @@ HEADER_EXT := .hpp
 CPPFLAGS := -std=c++98
 
 #update if needed
-CFLAGS = -Wall -Wextra -Werror -MD -I$(DIR_INC) #-fsanitize=address -g3
+CFLAGS = -Wall -Wextra -Werror -MD -I$(DIR_INC) -fsanitize=address -g3
 DIR_SRC := sources#.
 SUB_DIR_LST := Core Commands
 

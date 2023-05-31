@@ -10,9 +10,17 @@ Rep::Rep() {}
 void Rep::send_to_client(std::string msg, int const &fd) {
 	msg = ":" + std::string("irc.project.com") + " " + msg +"\r\n";
 	if (send_to_user(msg, fd) == -1)
-		throw ;
+		throw(std::runtime_error("Error: send function failed"));
 
 	//cout << ANSI::gray << "{send} => " << ANSI::purple << msg << endl;
+}
+
+void Rep::send_to_channel(std::string msg, Channel *chan)
+{
+	std::map<int, Client *>::iterator	it;
+
+	for (it = chan->mClientList.begin(); it != chan->mClientList.end(); it++)
+		send(it->first, msg.c_str(), msg.size(), 0);
 }
 
 /**
