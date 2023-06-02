@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 17:46:31 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/31 17:15:03 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/06/02 15:31:07 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ class Client
         public:
             Client();
             ~Client();
-            void appendToBuffer(const char *data, int size);
+            void appendToBuffer(char * data, int size);
             bool extractMessageFromBuffer(std::string &message);
 
             sockaddr_in &getStruct() {return ClientAddr;}

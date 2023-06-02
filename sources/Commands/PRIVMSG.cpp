@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 17:35:29 by eavilov           #+#    #+#             */
-/*   Updated: 2023/06/02 11:49:31 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/06/02 14:59:04 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,18 +71,27 @@ void	PRIVMSG::execute(Server *server, clientIt &iterator, std::vector<std::strin
 	for (unsigned int i = 2; i < args.size(); i++)
 		message.append(args[i] += ' ');
 	message.erase(message.size() - 1);
-	std::string ircMessage = "PRIVMSG " + args[1] + ": " + message + "\r\n";
+	std::string ircMessage = "PRIVMSG " + args[1] + " " + message + "\r\n";
 	std::string	fullMessage = ":" + iterator->second.getNickname() + " " + ircMessage;
 	if (fd != 0)
+	{
+		std::cout << "SENDING TO " << fd << std::endl;
 		send(fd, fullMessage.c_str(), fullMessage.size(), 0);
+	}
 	else
 	{
 		if (clientList.empty())
+		{
+			std::cout << "LIST IS EMPTY\n";
 			return Rep().E403(iterator->first, iterator->second.getNickname(), args[1]);
+		}
 		for (unsigned i = 0; i < clientList.size(); i++)
 		{
 			if (clientList[i] != iterator->first)
+			{
+				std::cout << "here SENDING TO " << clientList[i] << " {}" << fullMessage << std::endl;
 				send(clientList[i], fullMessage.c_str(), fullMessage.size(), 0);
+			}
 		}
 	}
 	std::cout << iterator->second.getNickname() << " sent a private message to " << args[1] << std::endl;

@@ -37,6 +37,7 @@ void    Server::launch(void)
 				char buffer[1024];
 				int num_bytes = recv(it->first, buffer, 1024, 0);
 				buffer[num_bytes] = 0;
+				std::string	buf = buffer;
 				dprintf(1, "buffer: %s", buffer);
 				if (it->second.getUsername() == "[Mildred]" && num_bytes > 0)
 				{
@@ -62,7 +63,7 @@ void    Server::launch(void)
 				}
 				else
 				{
-					it->second.appendToBuffer(buffer, num_bytes); 
+					it->second.appendToBuffer(buffer, num_bytes);
 					std::string	msg;
 					std::istringstream iss(msg);
 					std::string line;

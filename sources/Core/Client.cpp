@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 11:06:26 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/31 17:08:37 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/06/02 15:49:13 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,15 @@ Client::Client() : isAuthenticated(0), isRegistered(0), warns(0), isBot(false)
 
 Client::~Client() {}
 
-void Client::appendToBuffer(const char *data, int size)
-{buffer.append(data, size);}
+void Client::appendToBuffer(char * data, int size)
+{
+    if (data)
+    {
+        if ((size_t)size > std::strlen(data))
+            return ;
+        buffer.append(data, size);
+    }
+}
 
 bool Client::extractMessageFromBuffer(std::string &message)
 {
