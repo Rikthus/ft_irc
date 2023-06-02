@@ -23,8 +23,8 @@ void	KICK::execute(Server *server, clientIt &it, std::vector<std::string> args)
 			Rep().E482(it->first, it->second.getNickname(), args[1]);
 		else
 		{
-			std::string	addr = ":" + it->second.getNickname() + "!" + it->second.getUsername() + "@" + inet_ntoa(it->second.getAddr()) + " PART " + args[1] + " " + args[2] + "\r\n";
-			std::map<int, Client *>				clientList = chan->getClientList();
+			std::string	addr = ":" + it->second.getNickname() + "!" + it->second.getUsername() + "@" + inet_ntoa(it->second.getAddr()) + " KICK " + args[1] + " " + args[2] + "\r\n";
+			std::map<int, Client *>				&clientList = chan->getClientList();
 			std::map<int, Client *>::iterator	itClientList;
 			int									toKickSockfd;
 			for (itClientList = clientList.begin(); itClientList != clientList.end(); itClientList++)
@@ -33,6 +33,8 @@ void	KICK::execute(Server *server, clientIt &it, std::vector<std::string> args)
 				{
 					toKickSockfd = itClientList->second->getFd();
 					clientList.erase(itClientList);
+					chan->setOperator(false, args[2]);
+					Rep().send_to_client("MODE " + args[1] + " -o " + args[2], it->first);
 					send(toKickSockfd, addr.c_str(), addr.size(), 0);
 					break ;
 				}
