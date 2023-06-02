@@ -27,6 +27,17 @@ void Rep::sendListOfUsers(int clientSockfd, std::string nick, Channel *chan)
 	}
 }
 
+void Rep::sendToChannel(std::string msg, Channel *chan, int skipSockfd)
+{
+	std::map<int, Client *>::iterator	it;
+
+	for (it = chan->mClientList.begin(); it != chan->mClientList.end(); it++)
+	{
+		if (it->first != skipSockfd)
+			send(it->first, msg.c_str(), msg.size(), 0);
+	}
+}
+
 /**
  * @brief RPL_WELCOME
  * @param fd 

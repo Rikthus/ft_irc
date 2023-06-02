@@ -20,6 +20,7 @@ class Rep
 		Rep();
 		void	send_to_client(std::string msg, int const &fd);
 		void	sendListOfUsers(int clientSockfd, std::string nick, Channel *chan);
+		void	sendToChannel(std::string msg, Channel *chan, int skipSockfd);
 		
 				/* ----- Replies ----- */
 		void R001(NR_ARG);
