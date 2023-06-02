@@ -125,23 +125,23 @@ bool	Server::clientIsOperator(int toFind, std::string channelName)
 		return (false);
 }
 
-bool	Server::chanAuthentication(std::string channel, std::string pwd, int clientSockfd, std::string clientNick)	const
+bool	Server::chanAuthentication(std::string channel, std::string pwd, int clientSockfd, std::string clientNick)
 {
-	constChannelIt	itChan = mChannelList.find(channel);
+	channelIt	itChan = mChannelList.find(channel);
 
 	if (itChan->second.checkSpace() == false)
 	{
 		Rep().E471(clientSockfd, clientNick, channel);
 		return (false);
 	}
-	else if (itChan->second.findInvite(clientSockfd) == false)
-	{
-		Rep().E473(clientSockfd, clientNick, channel);
-		return (false);
-	}
 	else if (itChan->second.checkPwd(pwd) == false)
 	{
 		Rep().E475(clientSockfd, clientNick, channel);
+		return (false);
+	}
+	else if (itChan->second.findInvite(clientSockfd) == false)
+	{
+		Rep().E473(clientSockfd, clientNick, channel);
 		return (false);
 	}
 	return (true);

@@ -6,8 +6,8 @@
 #include <ctime>
 #include <sstream>
 
-#define USERMODE_CHARLIST "o"
-#define CHANNELMODE_CHARLIST "ositnmlbvk" //est utilisée pour définir une liste de caractères qui représentent les modes de canal dans un réseau IRC
+#define USERMODE_CHARLIST ""
+#define CHANNELMODE_CHARLIST "oitlk"
 #define NR_ARG int const &fd, const std::string& cNick
 
 class Channel;

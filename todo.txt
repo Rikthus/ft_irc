@@ -3,3 +3,21 @@
 -	numerical replies
 -	Makefile bonus		✓
 -	corriger leak bot
+
+
+
+
+
+
+
+KICK:
+
+- kick people
+
+INVITE:
+
+- no invite sent    ✓
+
+JOIN:
+
+- create chan with password crash   ✓
