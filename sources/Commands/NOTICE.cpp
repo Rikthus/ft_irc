@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 14:22:20 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/29 18:07:54 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/06/02 11:47:10 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,10 @@ int		NOTICE::findUser(std::map<int,Client> clientList, std::string name)
 void	NOTICE::execute(Server *server, clientIt &iterator, std::vector<std::string> args)
 {
 	if (args.size() < 3)
-	{
-		send(iterator->first, "412 ERR_NOTEXTTOSEND :No text to send\r\n", 40, 0);
-		return ;
-	}
+		return Rep().E412(iterator->first, iterator->second.getNickname());
 	int	fd = findUser(server->getClientList(), args[1]);
 	if (fd < 0)
-	{
-		send(iterator->first, "401 ERR_NOSUCHNICK :No such nick/channel\r\n", 43, 0);
-		return ;
-	}
+		return Rep().E401(iterator->first, iterator->second.getNickname(), args[1]);
 	std::string message;
 	for (unsigned int i = 2; i < args.size(); i++)
 		message.append(args[i] += ' ');

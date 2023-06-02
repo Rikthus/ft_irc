@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:44:25 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/29 18:08:15 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/06/02 13:03:17 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,17 @@ void	QUIT::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 	if (!iterator->second.getNickname().empty())
 		for (std::map<int,Client>::iterator it = server->getClientList().begin(); it != server->getClientList().end(); it++)
 			send(it->first, nickname.c_str(), nickname.size(), 0);
+	for (std::map<std::string, Channel>::iterator it1 = server->getChannelList().begin(); it1 != server->getChannelList().end(); it1++)
+	{
+		for (std::map<int, Client*>::iterator it2 = it1->second.getClientList().begin(); it2 != it1->second.getClientList().end(); it2++)
+		{
+			if (iterator->second.getNickname() == it2->second->getNickname())
+			{
+				it1->second.getClientList().erase(it2);
+				return ;
+			}
+		}
+	}
 }
 
 QUIT::QUIT()

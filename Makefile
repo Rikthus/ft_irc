@@ -18,6 +18,11 @@ LST_SRC :=	main \
 			Commands/TOPIC \
 			Commands/USER
 
+BONUS_SRC := bot/Bot.cpp \
+				bot/main.cpp
+
+BONUS_NAME := Mildred
+
 #update to match c or cpp
 CC := c++
 FILE_EXT := .cpp
@@ -25,7 +30,7 @@ HEADER_EXT := .hpp
 CPPFLAGS := -std=c++98
 
 #update if needed
-CFLAGS = -Wall -Wextra -Werror -MD -I$(DIR_INC) -fsanitize=address -g3
+CFLAGS = -Wall -Wextra -Werror -MD -I$(DIR_INC)# -fsanitize=address -g3
 DIR_SRC := sources#.
 SUB_DIR_LST := Core Commands
 
@@ -42,6 +47,9 @@ SUB_DIR=$(addprefix $(DIR_OBJ)/,$(SUB_DIR_LST))
 
 all : $(NAME)
 
+bonus : $(NAME)
+		$(CC) $(CFLAGS) $(CPPFLAGS) $(BONUS_SRC) -o $(BONUS_NAME)
+
 $(NAME) : $(OBJ)
 	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -o $@
 
@@ -55,10 +63,10 @@ $(SUB_DIR)	:
 	$(MD) $@
 
 clean :
-	$(RM) $(DIR_OBJ)
+	$(RM) $(DIR_OBJ) Mildred.d
 
 fclean : clean
-	$(RM) $(NAME)
+	$(RM) $(NAME) ${BONUS_NAME}
 
 re : fclean all
 

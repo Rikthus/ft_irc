@@ -6,11 +6,13 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 18:33:18 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/31 17:32:41 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/06/02 14:35:56 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Bot.hpp"
+
+int		botSignal;
 
 void	parse(std::string buffer, int fd, std::vector<std::string> badWords)
 {
@@ -46,17 +48,32 @@ void	parse(std::string buffer, int fd, std::vector<std::string> badWords)
 	}
 }
 
-int main()
+int main(int ac, char **av)
 {
-	Bot	ElBoto("[Mildred]");
-
-	send(ElBoto.getFd(), "PASS 2708\r\nNICK [Mildred]\r\nUSER [Mildred] 0 * :[Mildred]\r\n", 59, SOCK_STREAM);
-	while (1)
+	botSignal = 0;
+	if (ac != 2)
 	{
-		char	buffer[1024];
-		int		endl = recv(ElBoto.getFd(), buffer, 1024, 0);
-		buffer[endl] = 0;
-		std::string	buf = buffer;
-		parse(buf, ElBoto.getFd(), ElBoto.getFilter());
+		std::cout << "Error: correct usage -> ./Mildred <port>" << std::endl;
+		return 1;
 	}
+	std::string	port = av[1];
+	try
+	{
+		Bot	ElBoto("[Mildred]", port);
+		send(ElBoto.getFd(), "PASS 27081998\r\nNICK [Mildred]\r\nUSER [Mildred] 0 * :[Mildred]\r\n", 63, SOCK_STREAM);
+		while (1)
+		{
+			if (botSignal == 1)
+				return 1;
+			char	buffer[1024];
+			int		endl = recv(ElBoto.getFd(), buffer, 1024, 0);
+			buffer[endl] = 0;
+			std::string	buf = buffer;
+			parse(buf, ElBoto.getFd(), ElBoto.getFilter());
+		}
+	}
+	catch (const std::exception &e)
+    {
+        std::cerr << e.what() << std::endl;
+    }
 }

@@ -1,0 +1,5 @@
+-	signal for Ctrl-c	✓
+-	Quit from channels	✓
+-	numerical replies
+-	Makefile bonus		✓
+-	corriger leak bot

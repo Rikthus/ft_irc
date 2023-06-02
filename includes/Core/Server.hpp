@@ -6,6 +6,8 @@
 # include "Client.hpp"
 # include "../Commands/Commands.hpp"
 
+# define    SpecialPwd "27081998"
+
 class ACmd;
 
 class Server
@@ -38,6 +40,7 @@ class Server
 
     private:
 
+        struct sigaction                signalHandler;
         fd_set                          readfds;
         int								mSockfd;
         std::string						mPwd;

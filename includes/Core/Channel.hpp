@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tulipe <tulipe@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 18:11:17 by eavilov           #+#    #+#             */
-/*   Updated: 2023/06/01 00:57:15 by tulipe           ###   ########lyon.fr   */
+/*   Updated: 2023/06/02 14:47:27 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,9 @@ class Channel
 		int		setOperator(bool mode, std::string nick);
 
 		std::string	getName() {return mName;}
-		ClientData	getClientList() {return mClientList;}
+		ClientData	&getClientList() {return mClientList;}
+		std::vector<int>	&getInvitedList() {return mInvited;}
+		std::vector<int>	&getOperatorsList() {return mOperators;}
 
 		Channel(std::string chanName, int creatorSockfd, Client &creatorData, bool isPwd, std::string pwd);
 		~Channel(void);

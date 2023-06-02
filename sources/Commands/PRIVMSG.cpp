@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 17:35:29 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/31 13:31:19 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/06/02 11:49:31 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,14 @@ std::vector<int>	PRIVMSG::findChannel(std::map<std::string, Channel>	mChannelLis
 
 std::string itoa(int a)
 {
-    std::string ss="";   //create empty string
+    std::string ss="";
     while(a)
     {
-        int	x = a % 10;
-        a /= 10;
+        int		x = a % 10;
         char	i = '0';
+        a /= 10;
         i = i + x;
-        ss = i + ss;      //append new character at the front of the string!
+        ss = i + ss;
     }
     return ss;
 }
@@ -56,10 +56,7 @@ void	PRIVMSG::execute(Server *server, clientIt &iterator, std::vector<std::strin
 {
 	(void) server;
 	if (args.size() < 3)
-	{
-		Rep().E412(iterator->first, iterator->second.getNickname());
-		return ;
-	}
+		return Rep().E412(iterator->first, iterator->second.getNickname());
 
 	std::vector<int>	clientList;
 	int			fd = 0;
@@ -69,10 +66,7 @@ void	PRIVMSG::execute(Server *server, clientIt &iterator, std::vector<std::strin
 	else
 		fd = findUser(server->getClientList(), args[1]);
 	if (fd == -1)
-	{
-		Rep().E401(iterator->first, iterator->second.getNickname(), args[1]);
-		return ;
-	}
+		return Rep().E401(iterator->first, iterator->second.getNickname(), args[1]);
 	std::string message;
 	for (unsigned int i = 2; i < args.size(); i++)
 		message.append(args[i] += ' ');
@@ -84,10 +78,7 @@ void	PRIVMSG::execute(Server *server, clientIt &iterator, std::vector<std::strin
 	else
 	{
 		if (clientList.empty())
-		{
-			Rep().E403(iterator->first, iterator->second.getNickname(), args[1]);
-			return ;
-		}
+			return Rep().E403(iterator->first, iterator->second.getNickname(), args[1]);
 		for (unsigned i = 0; i < clientList.size(); i++)
 		{
 			if (clientList[i] != iterator->first)

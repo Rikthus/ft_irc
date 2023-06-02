@@ -8,13 +8,25 @@
 //      FUNCTIONS       //
 //////////////////////////
 
+int         globalSignal = 0;
+
+void	exitHandler(int signal)
+{
+	(void) signal;
+	globalSignal = 1;
+}
+
 void    Server::launch(void)
 {
 	while (1)
 	{
 		fd_set tmp_fds = this->readfds;
-		if (select(FD_SETSIZE, &tmp_fds, NULL, NULL, NULL) < 0)
-			throw(std::runtime_error("Error: select loop failed"));
+		if (sigaction(SIGINT, &signalHandler, 0) == -1)
+			throw(std::runtime_error("Error: signal handler failed"));
+		if (globalSignal == 1)
+			return ;
+		if (select(FD_SETSIZE, &tmp_fds, 0, 0, 0) < 0)
+			throw(std::runtime_error("Error: select failed"));
 		if (FD_ISSET(mSockfd, &tmp_fds))
 		    newClient(this->readfds);
 		for (clientIt it = mClientsList.begin(); it != mClientsList.end(); it++)
@@ -47,7 +59,7 @@ void    Server::launch(void)
 					FD_CLR(it->first, &this->readfds);
 					mClientsList.erase(it);
 					break ;
-				} 
+				}
 				else
 				{
 					it->second.appendToBuffer(buffer, num_bytes); 
@@ -62,7 +74,11 @@ void    Server::launch(void)
 					}
 				}
 			}
-			if (read(tmpSockfd, NULL, 0) == -1)break; 
+			if (read(tmpSockfd, NULL, 0) == -1)
+			{
+				std::cout << "read failed\n";
+				break;
+			}
 		}
 	}
 }
@@ -179,7 +195,7 @@ void Server::joinChan(std::string name, int clientSockfd, Client &clientData)
 //      BUILDERS        //
 //////////////////////////
 
-Server::Server(char *port, char *pwd) : mSockfd(socket(AF_INET, SOCK_STREAM, 0)), mOptval(1), mSpecialPwd("2708")
+Server::Server(char *port, char *pwd) : mSockfd(socket(AF_INET, SOCK_STREAM, 0)), mOptval(1), mSpecialPwd(SpecialPwd)
 {
     std::cout << "Server constructor engaged" << std::endl;
 	FD_ZERO(&readfds);FD_SET(mSockfd, &readfds);
@@ -203,7 +219,9 @@ Server::Server(char *port, char *pwd) : mSockfd(socket(AF_INET, SOCK_STREAM, 0))
 	{
         throw(std::runtime_error("Error: server launch failed"));
 	}
-
+	signalHandler.sa_handler = exitHandler;
+	sigemptyset(&signalHandler.sa_mask);
+	signalHandler.sa_flags = 0;
 	this->initCommands();
     std::cout << "Server is listening" << std::endl;
 }
@@ -211,12 +229,11 @@ Server::Server(char *port, char *pwd) : mSockfd(socket(AF_INET, SOCK_STREAM, 0))
 Server::~Server(void)
 {
 	std::cout << "Destructor called" << std::endl;
-	//std::map<std::string, ACmd *>::iterator	it = mCmdList.begin();
-
-    if (mSockfd >= 0)
-	{
-        close(mSockfd);
-	}
+	for (std::map<std::string, ACmd *>::iterator it = mCmdList.begin(); it != mCmdList.end(); it++)
+	 	delete it->second;
+	mCmdList.erase(mCmdList.begin(), mCmdList.end());
+	FD_CLR(mSockfd, &readfds);
+	close(mSockfd);
 }
 
 
@@ -245,17 +262,17 @@ bool Server::portVerif(char *str)	const
 
 void	Server::initCommands(void)
 {
-	mCmdList["INVITE"] = new INVITE();
-	mCmdList["JOIN"] = new JOIN();
-	mCmdList["KICK"] = new KICK();
-	mCmdList["MODE"] = new MODE();
-	mCmdList["NICK"] = new NICK();
-	mCmdList["NOTICE"] = new NOTICE();
-	mCmdList["PASS"] = new PASS();
-	mCmdList["PRIVMSG"] = new PRIVMSG();
-	mCmdList["QUIT"] = new QUIT();
-	mCmdList["TOPIC"] = new TOPIC();
-	mCmdList["USER"] = new USER();
+	mCmdList["INVITE"] =	new INVITE();
+	mCmdList["JOIN"] =		new JOIN();
+	mCmdList["KICK"] =		new KICK();
+	mCmdList["MODE"] =		new MODE();
+	mCmdList["NICK"] =		new NICK();
+	mCmdList["NOTICE"] =	new NOTICE();
+	mCmdList["PASS"] =		new PASS();
+	mCmdList["PRIVMSG"] =	new PRIVMSG();
+	mCmdList["QUIT"] =		new QUIT();
+	mCmdList["TOPIC"] =		new TOPIC();
+	mCmdList["USER"] =		new USER();
 }
 
 void Server::newClient(fd_set &readfds)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_irc.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tulipe <tulipe@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/14 19:21:48 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/28 11:55:28 by tulipe           ###   ########lyon.fr   */
+/*   Updated: 2023/06/02 14:29:32 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,13 @@
 
 # include <stdlib.h>
 
+# include <signal.h>
 # include <iostream>
 # include <string>
 # include <sstream>
 # include <cstring>
 # include <cstdio>
+# include <algorithm>
 # include <cstdlib>
 # include <unistd.h>
 # include <sys/socket.h>
