@@ -19,7 +19,7 @@ class Rep
 	public:
 		Rep();
 		void	send_to_client(std::string msg, int const &fd);
-		void	send_to_channel(std::string msg, Channel *chan);
+		void	sendListOfUsers(int clientSockfd, std::string nick, Channel *chan);
 		
 				/* ----- Replies ----- */
 		void R001(NR_ARG);

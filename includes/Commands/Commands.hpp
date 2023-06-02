@@ -93,17 +93,6 @@ class NOTICE: public ACmd
 		const		std::string type;
 };
 
-class LIST: public ACmd
-{
-	public:
-		LIST();
-		~LIST();
-		void	execute(Server *server, clientIt &iterator, std::vector<std::string> args);
-
-	private:
-		const		std::string type;
-};
-
 class TOPIC: public ACmd
 {
 	public:

@@ -21,7 +21,7 @@ void	INVITE::execute(Server *server, clientIt &it, std::vector<std::string> args
 		{
 			int invitedSockfd = server->findNickSockfd(args[1]);
 			chan->addInvitation(invitedSockfd);
-			std::string addr = ":" + it->second.getNickname() + "!" + it->second.getUsername() + "@" + inet_ntoa(it->second.getAddr()) + " INVITE " + args[1] + " :" + args[2] + "\n\r";
+			std::string addr = ":" + it->second.getNickname() + "!" + it->second.getUsername() + "@irc.project.com INVITE " + args[1] + " :" + args[2] + "\n\r";
 			send(invitedSockfd, addr.c_str(), addr.size(), 0);
 			Rep().R341(it->first, it->second.getNickname(), args[1], args[2]);
 		}

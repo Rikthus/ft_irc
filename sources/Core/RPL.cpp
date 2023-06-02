@@ -15,12 +15,16 @@ void Rep::send_to_client(std::string msg, int const &fd) {
 	//cout << ANSI::gray << "{send} => " << ANSI::purple << msg << endl;
 }
 
-void Rep::send_to_channel(std::string msg, Channel *chan)
+void Rep::sendListOfUsers(int clientSockfd, std::string nick, Channel *chan)
 {
 	std::map<int, Client *>::iterator	it;
+	std::string							msg;
 
 	for (it = chan->mClientList.begin(); it != chan->mClientList.end(); it++)
-		send(it->first, msg.c_str(), msg.size(), 0);
+	{
+		msg = ":irc.project.com 353 " + nick + " " + chan->getName() + " :" + it->second->getNickname() + "\r\n";
+		send(clientSockfd, msg.c_str(), msg.size(), 0);
+	}
 }
 
 /**

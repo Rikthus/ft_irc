@@ -12,7 +12,7 @@
 
 KICK:
 
-- kick people
+- kick people	✓
 
 INVITE:
 
@@ -21,4 +21,6 @@ INVITE:
 JOIN:
 
 - create chan with password crash   ✓
-- give list of users of the channel on joining
+- give list of users of the channel on joining	✓
+- every user of a channel should see actions that others a re doing 
+(tell everyone who joined or was kicked)
