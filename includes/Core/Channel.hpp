@@ -6,7 +6,7 @@
 /*   By: maxperei <maxperei@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 18:11:17 by eavilov           #+#    #+#             */
-/*   Updated: 2023/06/02 17:42:41 by maxperei         ###   ########lyon.fr   */
+/*   Updated: 2023/06/03 16:01:53 by maxperei         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ class Channel
 
 	public:
 
-		ClientData  		mClientList;
 		
 		bool	findInvite(int clientSockfd);
 		bool	checkPwd(std::string key) const;
@@ -69,11 +68,11 @@ class Channel
 
 	private:
 		std::string 		mName;
-		int					mAdmin;
 		std::vector<int>	mOperators;
 		std::vector<int>	mInvited;
 		std::string			mPwd;
 		std::string			mTopic;
+		ClientData  		mClientList;
 
 		bool		mTopicProtected;
 		bool		mPassProtected;
