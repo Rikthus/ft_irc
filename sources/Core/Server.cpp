@@ -353,7 +353,7 @@ void	Server::findCulprit(std::map<std::string,int>::iterator iterator)
 		{
 			it->second.addWarns(iterator->second);
 			std::string	warning;
-			if (it->second.getWarnLevel() >= 3 || iterator->second == 3)
+			if (iterator->second == 3)
 			{
 				warning = ":[Mildred] PRIVMSG " + it->second.getNickname() + " :You deserve a fate worse than death. Begone.\r\n";
 				send(it->first, warning.c_str(), warning.size(), 0);

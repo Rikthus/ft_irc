@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:44:30 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/31 17:12:28 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/06/02 17:15:13 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,18 +29,10 @@ void	USER::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 		return ;
 	}
 	if (args.size() != 5)
-	{
-		send(iterator->first, "Invalid use of USER\r\n", 22, 0);
-		return ;
-	}
+		return Rep().E461(iterator->first, iterator->second.getNickname(), args[0]);
 	std::string	username = args[1];
 	if (checkCharactersValidity(username) && !iterator->second.getIsBot())
-	{
-		std::string	error = ":irc.project.com 432 :Erroneous ";
-		error.append(username += "\r\n");
-		send(iterator->first, error.c_str(), error.size(), 0);
-		return ; 
-	}
+		return Rep().E432(iterator->first, iterator->second.getNickname(), username);
 	if (!checkDuplicateUser(username, server->getClientList()))
 	{
 		iterator->second.setUsername(username);
