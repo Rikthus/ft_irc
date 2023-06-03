@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 17:35:29 by eavilov           #+#    #+#             */
-/*   Updated: 2023/06/02 16:26:48 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/06/03 15:41:58 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ std::string itoa(int a)
 void	PRIVMSG::execute(Server *server, clientIt &iterator, std::vector<std::string> args)
 {
 	(void) server;
+	if (!iterator->second.getRegistration())
+		return Rep().E451(iterator->first, iterator->second.getNickname());
 	if (args.size() < 3)
 		return Rep().E412(iterator->first, iterator->second.getNickname());
 
@@ -74,10 +76,7 @@ void	PRIVMSG::execute(Server *server, clientIt &iterator, std::vector<std::strin
 	std::string ircMessage = "PRIVMSG " + args[1] + " " + message + "\r\n";
 	std::string	fullMessage = ":" + iterator->second.getNickname() + " " + ircMessage;
 	if (fd != 0)
-	{
-		std::cout << "sending: " << fullMessage;
 		send(fd, fullMessage.c_str(), fullMessage.size(), 0);
-	}
 	else
 	{
 		if (clientList.empty())
@@ -87,10 +86,7 @@ void	PRIVMSG::execute(Server *server, clientIt &iterator, std::vector<std::strin
 		for (unsigned i = 0; i < clientList.size(); i++)
 		{
 			if (clientList[i] != iterator->first)
-			{
-				std::cout << "sending: " << fullMessage;
 				send(clientList[i], fullMessage.c_str(), fullMessage.size(), 0);
-			}
 		}
 	}
 	std::cout << iterator->second.getNickname() << " sent a private message to " << args[1] << std::endl;

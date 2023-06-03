@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:44:30 by eavilov           #+#    #+#             */
-/*   Updated: 2023/06/02 17:15:13 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/06/03 16:05:03 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,8 @@ bool	USER::checkDuplicateUser(std::string username, std::map<int,Client> mClient
 
 void	USER::execute(Server *server, clientIt &iterator, std::vector<std::string> args)
 {
-	if (!iterator->second.getAuthentication())
-	{
+	if (!iterator->second.getAuthentication() || !iterator->second.hasNick())
 		return ;
-	}
 	if (args.size() != 5)
 		return Rep().E461(iterator->first, iterator->second.getNickname(), args[0]);
 	std::string	username = args[1];
@@ -36,20 +34,18 @@ void	USER::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 	if (!checkDuplicateUser(username, server->getClientList()))
 	{
 		iterator->second.setUsername(username);
+		iterator->second.setRegistration();
 		if (username == "[Mildred]")
 			server->setBotFd(iterator->first);
 		std::cout << username << " successfully registered." << std::endl;
-		Rep().R001(iterator->first, username);
+		Rep().R001(iterator->first, username, server->getPigeon());
 		Rep().R002(iterator->first, username, "*irc de la rue zebi 😂👌*", "0.42");
 		Rep().R003(iterator->first, username, "on a monday");
 		Rep().R004(iterator->first, username);
 		
 	}
 	else
-	{
-		std::string	error("Username already taken (" + username + ")\r\n");
-		send(iterator->first, error.c_str(), error.size(), 0);
-	}
+		return Rep().E433(iterator->first, iterator->second.getNickname(), args[1]);
 }
 
 USER::USER()

@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   QUIT.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maxperei <maxperei@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:44:25 by eavilov           #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2023/06/03 12:55:02 by maxperei         ###   ########lyon.fr   */
-=======
-/*   Updated: 2023/06/03 13:59:30 by eavilov          ###   ########.fr       */
->>>>>>> 22f603761da39c13f98eebdffa89c692d3ed597a
+/*   Updated: 2023/06/03 15:39:29 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,19 +16,20 @@ void	QUIT::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 {
 	std::cout << "Client " << ntohs(iterator->second.getPort()) << " disconnected" << std::endl;
 	std::string	message;
+	std::string	protocol = ":" + iterator->second.getNickname() + "!" + iterator->second.getUsername() + "@irc.project.com ";
 	std::string	nickname = iterator->second.getNickname();
 	for (std::vector<std::string>::iterator it = args.begin(); it != args.end(); it++)
 		message.append(*it += " ");
 	message.erase(message.size() - 1);
 	message.erase(0, 5);
-	if (message == ":WeeChat 3.8" || message.empty())
+	if (message.empty())
 	{
 		message.erase();
-		message = "QUIT :" + nickname + " has disconnected\r\n";
+		message = protocol + "QUIT :" + nickname + " has disconnected\r\n";
 	}
 	else
 	{
-		std::string	tmpMessage = "QUIT:" + nickname + " has disconnected (" + message + ")\r\n";
+		std::string	tmpMessage = protocol + "QUIT :" + nickname + " has disconnected (" + message + ")\r\n";
 		message = tmpMessage;
 	}
 	close(iterator->first);
@@ -40,7 +37,7 @@ void	QUIT::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 	server->getClientList().erase(iterator);
 	if (!iterator->second.getNickname().empty())
 		for (std::map<int,Client>::iterator it = server->getClientList().begin(); it != server->getClientList().end(); it++)
-			send(it->first, nickname.c_str(), nickname.size(), 0);
+			send(it->first, message.c_str(), message.size(), 0);
 	for (std::map<std::string, Channel>::iterator it1 = server->getChannelList().begin(); it1 != server->getChannelList().end(); it1++)
 	{
 		for (std::map<int, Client*>::iterator it2 = it1->second.getClientList().begin(); it2 != it1->second.getClientList().end(); it2++)
@@ -58,6 +55,8 @@ void	QUIT::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 					if (iterator->first == *it4)
 						{it1->second.getInvitedList().erase(it4);break;}
 				}
+				if (it1->second.getClientList().empty())
+					server->getChannelList().erase(it1);
 				return ;
 			}
 		}

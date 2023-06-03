@@ -43,9 +43,10 @@ void Rep::sendToChannel(std::string msg, Channel *chan, int skipSockfd)
  * @param fd 
  * @param cNick 
  */
-void Rep::R001(int const &fd, const std::string &cNick)
+void Rep::R001(int const &fd, const std::string &cNick, std::string pigeon)
 {
-	output << "001 " << cNick << " :Welcome " << cNick << " to the Internet Chat Relay!";
+	output << "001 " << cNick << " :Welcome " << cNick << " to the Internet Chat Relay!\r\n";
+	output << pigeon;
 	send_to_client(output.str(), fd);
 	clearBuffer();
 }

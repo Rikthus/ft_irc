@@ -51,7 +51,7 @@ all : $(NAME)
 bonus : $(NAME) $(BONUS_NAME)
 
 $(BONUS_NAME) : $(OBJ)
-	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -o $@
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(BONUS_SRC) -o $@
 
 $(NAME) : $(OBJ)
 	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -o $@
@@ -66,7 +66,7 @@ $(SUB_DIR)	:
 	$(MD) $@
 
 clean :
-	$(RM) $(DIR_OBJ)
+	$(RM) $(DIR_OBJ) Mildred.d
 
 fclean : clean
 	$(RM) $(NAME) $(BONUS_NAME)

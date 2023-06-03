@@ -29,6 +29,7 @@ class Server
 
         int         getFd() {return mSockfd;}
         int         getBotFd() {return botFd;}
+        std::string getPigeon() {return pigeon;}
         std::string getPwd() {return mPwd;}
         std::string getSpecialPwd() {return mSpecialPwd;}
         fd_set      &getReadFds() {return readfds;}
@@ -46,6 +47,7 @@ class Server
         std::string						mPwd;
         int								mOptval;
         std::string                     mSpecialPwd;
+        std::string                     pigeon;
         int								mServerPort;
         int                             botFd;
         struct	sockaddr_in				mServAddr;
@@ -59,6 +61,7 @@ class Server
         void    newClient(fd_set &readfds);
         void    sendMessage(int fd, std::string message);
 		void	applyCommand(std::string line, std::string message, clientIt it, fd_set &readfds);
+        void    pigeonBuilder();
 
 		void	authenticateClient(std::string msg, int fd, Client &Client);
 		void	registerClientsNick(std::string msg, int fd, Client &Client);

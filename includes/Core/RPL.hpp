@@ -23,7 +23,7 @@ class Rep
 		void	sendToChannel(std::string msg, Channel *chan, int skipSockfd);
 		
 				/* ----- Replies ----- */
-		void R001(NR_ARG);
+		void R001(NR_ARG, std::string pigeon);
 		void R002(NR_ARG, const std::string& servName, const std::string &servVersion);
 		void R003(NR_ARG, const std::string& date);
 		void R004(NR_ARG);

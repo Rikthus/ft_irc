@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tulipe <tulipe@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 17:46:31 by eavilov           #+#    #+#             */
-/*   Updated: 2023/06/02 23:12:40 by tulipe           ###   ########lyon.fr   */
+/*   Updated: 2023/06/03 15:58:41 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,12 @@ class Client
             bool        getAuthentication() {return isAuthenticated;}
             bool        getRegistration() {return isRegistered;}
             bool        getIsBot() {return isBot;}
+            bool        hasNick() {return hasNickname;}
             
             void        setClifd(int &fd) {this->clifd = fd;}
             void        setAuthentication() {this->isAuthenticated = true;}
             void        setRegistration() {this->isRegistered = true;}
-            void        setNickname(std::string name) {this->nickname = name;}
+            void        setNickname(std::string name) {this->nickname = name; this->hasNickname = true;}
             void        setUsername(std::string name) {this->username = name;}
             void        setBotBool() {this->isBot = true;}
             void        addWarns(int amount) {this->warns += amount;}
@@ -48,6 +49,7 @@ class Client
             std::string         nickname;
             std::string         username;
             std::string         buffer;
+            bool                hasNickname;
             bool                isAuthenticated;
             bool                isRegistered;
             int                 warns;

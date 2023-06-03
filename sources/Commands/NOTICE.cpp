@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 14:22:20 by eavilov           #+#    #+#             */
-/*   Updated: 2023/06/02 16:40:37 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/06/03 15:42:02 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ std::vector<int>	NOTICE::findChannel(std::map<std::string, Channel>	mChannelList
 
 void	NOTICE::execute(Server *server, clientIt &iterator, std::vector<std::string> args)
 {
+	if (!iterator->second.getRegistration())
+		return Rep().E451(iterator->first, iterator->second.getNickname());
 	if (args.size() < 3)
 		return Rep().E412(iterator->first, iterator->second.getNickname());
 	std::vector<int>	clientList;
@@ -64,10 +66,7 @@ void	NOTICE::execute(Server *server, clientIt &iterator, std::vector<std::string
 		for (unsigned i = 0; i < clientList.size(); i++)
 		{
 			if (clientList[i] != iterator->first)
-			{
-				std::cout << "sending: " << ircMessage;
 				send(clientList[i], ircMessage.c_str(), ircMessage.size(), 0);
-			}
 		}
 	}
 	std::cout << iterator->second.getNickname() << " sent a notice to " << args[1] << std::endl;

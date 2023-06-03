@@ -2,6 +2,8 @@
 
 void	INVITE::execute(Server *server, clientIt &it, std::vector<std::string> args)
 {
+	if (!it->second.getRegistration())
+		return Rep().E451(it->first, it->second.getNickname());
 	if (args.size() != 3)
 		Rep().E461(it->first, it->second.getNickname(), "INVITE");
 	else if (args[2].size() < 2 || args[2][0] != '#')
