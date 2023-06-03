@@ -189,7 +189,7 @@ void Server::joinChan(std::string name, int clientSockfd, Client &clientData)
 //      BUILDERS        //
 //////////////////////////
 
-Server::Server(char *port, char *pwd) : mSockfd(socket(AF_INET, SOCK_STREAM, 0)), mOptval(1), mSpecialPwd(SpecialPwd)
+Server::Server(char *port, char *pwd) : mSockfd(socket(AF_INET, SOCK_STREAM, 0)), mOptval(1), mSpecialPwd(SpecialPwd), botFd(-1)
 {
     std::cout << "Server constructor engaged" << std::endl;
 	FD_ZERO(&readfds);FD_SET(mSockfd, &readfds);
@@ -223,10 +223,9 @@ Server::Server(char *port, char *pwd) : mSockfd(socket(AF_INET, SOCK_STREAM, 0))
 
 Server::~Server(void)
 {
-	std::cout << "Destructor called" << std::endl;
 	for (std::map<std::string, ACmd *>::iterator it = mCmdList.begin(); it != mCmdList.end(); it++)
 	 	delete it->second;
-	mCmdList.erase(mCmdList.begin(), mCmdList.end());
+	// mCmdList.erase(mCmdList.begin(), mCmdList.end());
 	FD_CLR(mSockfd, &readfds);
 	close(mSockfd);
 }
@@ -309,17 +308,15 @@ void	Server::applyCommand(std::string line, std::string message, clientIt it, fd
 std::vector<std::string>	Server::splitCommand(std::string cmd)
 {
 	std::vector<std::string>	args;
-	int	start = 0;
-	int end = cmd.find(" ");
+	std::string	line;
+	std::istringstream iss(cmd);
 
-	while (end != -1)
+	while (std::getline(iss, line, ' '))
 	{
-		args.push_back(cmd.substr(start, end - start));
-		start = end + 1;
-		end = cmd.find(" ", start);
+		if (!line.empty())
+			args.push_back(line);
 	}
-	args.push_back(cmd.substr(start, cmd.size() - start));
-	return (args);
+	return args;
 }
 
 //////////////
@@ -365,7 +362,7 @@ void	Server::findCulprit(std::map<std::string,int>::iterator iterator)
 				warning = ":[Mildred] PRIVMSG " + it->second.getNickname() + " :I just nicely asked you to calm down, second warning.\r\n";
 				send(it->first, warning.c_str(), warning.size(), 0);
 			}
-			else if (it->second.getWarnLevel() == 2)
+			else if (it->second.getWarnLevel() == 3)
 			{
 				warning = ":[Mildred] PRIVMSG " + it->second.getNickname() + " :Aight bro, that's it, bye.\r\n";
 				send(it->first, warning.c_str(), warning.size(), 0);

@@ -116,6 +116,8 @@ class INVITE: public ACmd
 		INVITE();
 		~INVITE();
 		void	execute(Server *server, clientIt &it, std::vector<std::string> args);
+	private:
+		bool	isInServer(Server *server, std::string nick);
 };
 
 class MODE: public ACmd

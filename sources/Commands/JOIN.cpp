@@ -49,9 +49,12 @@ void	JOIN::execute(Server *server, clientIt &it, std::vector<std::string> args)
 	{
 		if (i < keys.size())
 		{
-			if (server->findChannel(channels[i]))
+			Channel *chan = server->findChannel(channels[i]);
+			if (chan)
 			{
-				if (server->chanAuthentication(channels[i], keys[i], it->first, it->second.getNickname()))
+				if (chan->clientIsInChan(it->second.getNickname()))
+					Rep().E443(it->first, it->second.getNickname(), args[2], args[1]);
+				else if (server->chanAuthentication(channels[i], keys[i], it->first, it->second.getNickname()))
 				{
 					server->joinChan(channels[i], it->first, it->second);
 					std::string	msg = ":" + it->second.getNickname() + "!" + it->second.getUsername() + "@irc.project.com JOIN " + channels[i] + "\r\n";
@@ -78,9 +81,12 @@ void	JOIN::execute(Server *server, clientIt &it, std::vector<std::string> args)
 		}
 		else
 		{
-			if (server->findChannel(channels[i]))
+			Channel *chan = server->findChannel(channels[i]);
+			if (chan)
 			{
-				if (server->chanAuthentication(channels[i], NO_PWD, it->first, it->second.getNickname()))
+				if (chan->clientIsInChan(it->second.getNickname()))
+					Rep().E443(it->first, it->second.getNickname(), args[2], args[1]);
+				else if (server->chanAuthentication(channels[i], NO_PWD, it->first, it->second.getNickname()))
 				{
 					server->joinChan(channels[i], it->first, it->second);
 					std::string	msg = ":" + it->second.getNickname() + "!" + it->second.getUsername() + "@irc.project.com JOIN " + channels[i] + "\r\n";

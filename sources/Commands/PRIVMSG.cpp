@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PRIVMSG.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
+/*   By: maxperei <maxperei@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 17:35:29 by eavilov           #+#    #+#             */
-/*   Updated: 2023/06/03 15:41:58 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/06/03 18:49:21 by maxperei         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,8 @@ void	PRIVMSG::execute(Server *server, clientIt &iterator, std::vector<std::strin
 	}
 	std::cout << iterator->second.getNickname() << " sent a private message to " << args[1] << std::endl;
 	std::string	messageToBot = "[FROM]_" + iterator->second.getNickname() + ": " + message + "\r\n";
-	send(server->getBotFd(), messageToBot.c_str(), messageToBot.size(), SOCK_STREAM);
+	if (server->getBotFd() > 0)
+		send(server->getBotFd(), messageToBot.c_str(), messageToBot.size(), SOCK_STREAM);
 }
 
 PRIVMSG::PRIVMSG()

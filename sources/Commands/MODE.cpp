@@ -18,7 +18,7 @@ void	MODE::execute(Server *server, clientIt &it, std::vector<std::string> args)
 	else if (server->clientIsInChannel(it->first, args[1]) == false)
 		Rep().E442(it->first, it->second.getNickname(), args[1]);
 	else if (args.size() == 2)
-		Rep().R324(it->first, it->second.getNickname(), args[1], chan->getMods(), "");
+		Rep().R324(it->first, it->second.getNickname(), args[1], " current channel mods: ", chan->getMods());
 	else if (server->clientIsOperator(it->first, args[1]) == false)
 		Rep().E482(it->first, it->second.getNickname(), args[1]);
 	else

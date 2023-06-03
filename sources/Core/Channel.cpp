@@ -51,7 +51,10 @@ void	Channel::addClient(int clientSockfd, Client &clientData)
 	for (std::vector<int>::iterator it = mInvited.begin(); it != mInvited.end(); it++)
 	{
 		if (*it == clientSockfd)
+		{
 			mInvited.erase(it);
+			return ;
+		}
 	}
 }
 

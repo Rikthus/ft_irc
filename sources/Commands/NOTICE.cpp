@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   NOTICE.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
+/*   By: maxperei <maxperei@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 14:22:20 by eavilov           #+#    #+#             */
-/*   Updated: 2023/06/03 15:42:02 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/06/03 18:49:36 by maxperei         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,8 @@ void	NOTICE::execute(Server *server, clientIt &iterator, std::vector<std::string
 	}
 	std::cout << iterator->second.getNickname() << " sent a notice to " << args[1] << std::endl;
 	std::string	messageToBot = "[FROM]_" + iterator->second.getNickname() + ": " + message + "\r\n";
-	send(server->getBotFd(), messageToBot.c_str(), messageToBot.size(), SOCK_STREAM);
+	if (server->getBotFd() > 0)
+		send(server->getBotFd(), messageToBot.c_str(), messageToBot.size(), SOCK_STREAM);
 }
 
 

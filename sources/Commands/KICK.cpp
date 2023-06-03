@@ -25,10 +25,7 @@ void	KICK::execute(Server *server, clientIt &it, std::vector<std::string> args)
 		{
 			std::string	msg = ":" + it->second.getNickname() + "!" + it->second.getUsername() + "@irc.project.com KICK " + args[1] + " " + args[2];
 			for (unsigned long i = 3; i < args.size(); i++)
-			{
-				msg.append(" ");
-				msg.append(args[i]);
-			}
+				msg += ' ' + args[i];
 			msg.append("\r\n");
 			std::map<int, Client *>				&clientList = chan->getClientList();
 			std::map<int, Client *>::iterator	itClientList;
