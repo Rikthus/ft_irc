@@ -7,10 +7,11 @@
 
 error on client disconnecting:             basic_string::_M_create
 
-on QUIT tell everyone that someone quit the server and on channels too
 
 
+QUIT:
 
+- if last user of a channel quits, delete the channel
 
 KICK:
 
@@ -25,4 +26,10 @@ JOIN:
 - create chan with password crash   ✓
 - give list of users of the channel on joining	✓
 - every user of a channel should see actions that others a re doing 
-(tell everyone who joined or was kicked)
+(tell everyone who joined or was kicked)    ✓
+
+
+USEFULL ERRORS:
+
+-E451 you have not registered
+-E421 unknown command

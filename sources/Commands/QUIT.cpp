@@ -6,11 +6,7 @@
 /*   By: maxperei <maxperei@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:44:25 by eavilov           #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2023/06/03 12:55:02 by maxperei         ###   ########lyon.fr   */
-=======
-/*   Updated: 2023/06/03 13:59:30 by eavilov          ###   ########.fr       */
->>>>>>> 22f603761da39c13f98eebdffa89c692d3ed597a
+/*   Updated: 2023/06/03 14:44:51 by maxperei         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +21,7 @@ void	QUIT::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 		message.append(*it += " ");
 	message.erase(message.size() - 1);
 	message.erase(0, 5);
-	if (message == ":WeeChat 3.8" || message.empty())
+	if (message == ": HexChat" || message.empty())
 	{
 		message.erase();
 		message = "QUIT :" + nickname + " has disconnected\r\n";

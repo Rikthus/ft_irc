@@ -89,7 +89,7 @@ void	MODE::execute(Server *server, clientIt &it, std::vector<std::string> args)
 						if ((args[2].size() == 1 || (args[2].size() == 2 && (args[2][0] == '+' || args[2][0] == '-'))) && args.size() == 4)
 						{
 							chan->setCapped(type, std::atoi(args[3].c_str()));
-							Rep().send_to_client("MODE " + args[1] + " -l " + args[3], it->first);
+							Rep().send_to_client("MODE " + args[1] + " +l " + args[3], it->first);
 						}
 						else
 							Rep().E501(it->first, it->second.getNickname());
