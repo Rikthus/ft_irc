@@ -17,10 +17,10 @@ void Rep::send_to_client(std::string msg, int const &fd) {
 
 void Rep::sendListOfUsers(int clientSockfd, std::string nick, Channel *chan)
 {
+	std::map<int, Client *>				&clientList = chan->getClientList();
 	std::map<int, Client *>::iterator	it;
 	std::string							msg;
-
-	for (it = chan->mClientList.begin(); it != chan->mClientList.end(); it++)
+	for (it = clientList.begin(); it != clientList.end(); it++)
 	{
 		msg = ":irc.project.com 353 " + nick + " " + chan->getName() + " :" + it->second->getNickname() + "\r\n";
 		send(clientSockfd, msg.c_str(), msg.size(), 0);
@@ -29,9 +29,10 @@ void Rep::sendListOfUsers(int clientSockfd, std::string nick, Channel *chan)
 
 void Rep::sendToChannel(std::string msg, Channel *chan, int skipSockfd)
 {
+	std::map<int, Client *>				&clientList = chan->getClientList();
 	std::map<int, Client *>::iterator	it;
 
-	for (it = chan->mClientList.begin(); it != chan->mClientList.end(); it++)
+	for (it = clientList.begin(); it != clientList.end(); it++)
 	{
 		if (it->first != skipSockfd)
 			send(it->first, msg.c_str(), msg.size(), 0);
@@ -193,20 +194,6 @@ void Rep::E403(int const &fd, const std::string &cNick, const std::string& chanN
 }
 
 /**
- * @brief You have joined too many channels
- * 
- * @param fd 
- * @param cNick 
- * @param chanName 
- */
-void Rep::E405(int const &fd, const std::string &cNick, const std::string& chanName)
-{
-	output << "405 " << cNick << " " << chanName <<  " :You have joined too many channels";	
-	send_to_client(output.str(), fd);
-	clearBuffer();
-}
-
-/**
  * @brief No text to send
  * 
  * @param fd 
@@ -215,20 +202,6 @@ void Rep::E405(int const &fd, const std::string &cNick, const std::string& chanN
 void Rep::E412(int const &fd, const std::string &cNick)
 {
 	output << "412 " << cNick << " :No text to send";
-	send_to_client(output.str(), fd);
-	clearBuffer();
-}
-
-/**
- * @brief Unknown command
- * 
- * @param fd 
- * @param cNick 
- * @param cmd 
- */
-void Rep::E421(int const &fd, const std::string &cNick, const std::string& cmd)
-{
-	output << "421 " << cNick << " " << cmd << " :Unknown command";
 	send_to_client(output.str(), fd);
 	clearBuffer();
 }
@@ -443,4 +416,9 @@ void Rep::E501(int const &fd, const std::string &cNick)
 	output << "501 " << cNick << " :Unknown MODE flag";
 	send_to_client(output.str(), fd);
 	clearBuffer();
+}
+
+void	Rep::clearBuffer()
+{
+	output.str("");
 }

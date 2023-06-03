@@ -106,7 +106,7 @@ void	Channel::rplTopic(void)
 //////////////////////////
 
 Channel::Channel(std::string chanName, int creatorSockfd, Client &creatorData, bool isPwd, std::string pwd)
-				: mName(chanName), mAdmin(creatorSockfd)
+				: mName(chanName)
 {
 	if (isPwd)
 	{
@@ -118,7 +118,7 @@ Channel::Channel(std::string chanName, int creatorSockfd, Client &creatorData, b
 		mPassProtected = false;
 		mPwd = "\0";
 	}
-	mClientList.insert(std::pair<int, Client*>(mAdmin, &creatorData));
+	mClientList.insert(std::pair<int, Client*>(creatorSockfd, &creatorData));
 	mOperators.push_back(creatorSockfd);
 	mTopic = "\0";
 	mTopicProtected = false;
