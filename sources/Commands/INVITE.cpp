@@ -24,6 +24,7 @@ void	INVITE::execute(Server *server, clientIt &it, std::vector<std::string> args
 			std::string msg = ":" + it->second.getNickname() + "!" + it->second.getUsername() + "@irc.project.com INVITE " + args[1] + " :" + args[2] + "\n\r";
 			send(invitedSockfd, msg.c_str(), msg.size(), 0);
 			Rep().R341(it->first, it->second.getNickname(), args[1], args[2]);
+			Rep().sendToChannel(msg, chan, it->first);
 		}
 	}
 }

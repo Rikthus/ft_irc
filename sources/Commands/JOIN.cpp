@@ -61,6 +61,7 @@ void	JOIN::execute(Server *server, clientIt &it, std::vector<std::string> args)
 						Rep().R332(it->first, it->second.getNickname(), channels[i], chan->getTopic());
 					Rep().sendListOfUsers(it->first, it->second.getNickname(), chan);
 					Rep().R366(it->first, it->second.getNickname(), channels[i]);
+					Rep().sendToChannel(msg, chan, it->first);
 				}
 			}
 			else
@@ -89,6 +90,7 @@ void	JOIN::execute(Server *server, clientIt &it, std::vector<std::string> args)
 						Rep().R332(it->first, it->second.getNickname(), channels[i], chan->getTopic());
 					Rep().sendListOfUsers(it->first, it->second.getNickname(), chan);
 					Rep().R366(it->first, it->second.getNickname(), channels[i]);	
+					Rep().sendToChannel(msg, chan, it->first);
 				}
 			}
 			else
