@@ -189,7 +189,7 @@ void Server::joinChan(std::string name, int clientSockfd, Client &clientData)
 //      BUILDERS        //
 //////////////////////////
 
-Server::Server(char *port, char *pwd) : mSockfd(socket(AF_INET, SOCK_STREAM, 0)), mOptval(1), mSpecialPwd(SpecialPwd)
+Server::Server(char *port, char *pwd) : mSockfd(socket(AF_INET, SOCK_STREAM, 0)), mOptval(1), mSpecialPwd(SpecialPwd), botFd(-1)
 {
     std::cout << "Server constructor engaged" << std::endl;
 	FD_ZERO(&readfds);FD_SET(mSockfd, &readfds);
@@ -365,7 +365,7 @@ void	Server::findCulprit(std::map<std::string,int>::iterator iterator)
 				warning = ":[Mildred] PRIVMSG " + it->second.getNickname() + " :I just nicely asked you to calm down, second warning.\r\n";
 				send(it->first, warning.c_str(), warning.size(), 0);
 			}
-			else if (it->second.getWarnLevel() == 2)
+			else if (it->second.getWarnLevel() == 3)
 			{
 				warning = ":[Mildred] PRIVMSG " + it->second.getNickname() + " :Aight bro, that's it, bye.\r\n";
 				send(it->first, warning.c_str(), warning.size(), 0);

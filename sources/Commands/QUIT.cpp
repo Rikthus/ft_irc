@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:44:25 by eavilov           #+#    #+#             */
-/*   Updated: 2023/06/03 15:39:29 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/06/03 16:19:31 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ void	QUIT::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 	}
 	close(iterator->first);
 	FD_CLR(iterator->first, &server->getReadFds());
-	server->getClientList().erase(iterator);
 	if (!iterator->second.getNickname().empty())
 		for (std::map<int,Client>::iterator it = server->getClientList().begin(); it != server->getClientList().end(); it++)
 			send(it->first, message.c_str(), message.size(), 0);
