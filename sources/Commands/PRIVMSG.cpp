@@ -6,7 +6,7 @@
 /*   By: maxperei <maxperei@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 17:35:29 by eavilov           #+#    #+#             */
-/*   Updated: 2023/06/03 18:49:21 by maxperei         ###   ########lyon.fr   */
+/*   Updated: 2023/06/03 19:01:24 by maxperei         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,13 +80,11 @@ void	PRIVMSG::execute(Server *server, clientIt &iterator, std::vector<std::strin
 	else
 	{
 		if (clientList.empty())
-		{
 			return Rep().E403(iterator->first, iterator->second.getNickname(), args[1]);
-		}
-		for (unsigned i = 0; i < clientList.size(); i++)
+		for (std::vector<int>::iterator it = clientList.begin(); it != clientList.end(); it++)
 		{
-			if (clientList[i] != iterator->first)
-				send(clientList[i], fullMessage.c_str(), fullMessage.size(), 0);
+			if (*it != iterator->first)
+				send(*it, fullMessage.c_str(), fullMessage.size(), 0);
 		}
 	}
 	std::cout << iterator->second.getNickname() << " sent a private message to " << args[1] << std::endl;
