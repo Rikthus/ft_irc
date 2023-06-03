@@ -18,8 +18,8 @@ LST_SRC :=	main \
 			Commands/TOPIC \
 			Commands/USER
 
-BONUS_SRC := bot/Bot.cpp \
-				bot/main.cpp
+BONUS_SRC := Bot/Bot.cpp \
+				Bot/botMain.cpp
 
 BONUS_NAME := Mildred
 
@@ -32,7 +32,7 @@ CPPFLAGS := -std=c++98
 #update if needed
 CFLAGS = -Wall -Wextra -Werror -MD -I$(DIR_INC)# -fsanitize=address -g3
 DIR_SRC := sources#.
-SUB_DIR_LST := Core Commands
+SUB_DIR_LST := Core Commands Bot
 
 #shouldn't need to update
 RM := rm -rf
@@ -44,16 +44,19 @@ DIR_OBJ := .object
 OBJ=$(addprefix $(DIR_OBJ)/,$(addsuffix .o,$(LST_SRC)))
 DEP=$(addprefix $(DIR_OBJ)/,$(addsuffix .d,$(LST_SRC)))
 SUB_DIR=$(addprefix $(DIR_OBJ)/,$(SUB_DIR_LST))
+SUB_DIR_BONUS=$(addprefix $(DIR_OBJ)/,$(SUB_DIR_LST))
 
 all : $(NAME)
 
-bonus : $(NAME)
-		$(CC) $(CFLAGS) $(CPPFLAGS) $(BONUS_SRC) -o $(BONUS_NAME)
+bonus : $(NAME) $(BONUS_NAME)
+
+$(BONUS_NAME) : $(OBJ)
+	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -o $@
 
 $(NAME) : $(OBJ)
 	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -o $@
 
-$(DIR_OBJ)/%.o : $(DIR_SRC)/%$(FILE_EXT) Makefile | $(DIR_OBJ) $(SUB_DIR)
+$(DIR_OBJ)/%.o : $(DIR_SRC)/%$(FILE_EXT) Makefile | $(DIR_OBJ) $(SUB_DIR) $(SUB_DIR_BONUS)
 	$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ -c $<
 
 $(DIR_OBJ)	:
@@ -63,10 +66,10 @@ $(SUB_DIR)	:
 	$(MD) $@
 
 clean :
-	$(RM) $(DIR_OBJ) Mildred.d
+	$(RM) $(DIR_OBJ)
 
 fclean : clean
-	$(RM) $(NAME) ${BONUS_NAME}
+	$(RM) $(NAME) $(BONUS_NAME)
 
 re : fclean all
 

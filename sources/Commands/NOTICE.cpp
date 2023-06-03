@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 14:22:20 by eavilov           #+#    #+#             */
-/*   Updated: 2023/06/02 11:47:10 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/06/02 16:40:37 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,20 +22,57 @@ int		NOTICE::findUser(std::map<int,Client> clientList, std::string name)
 	return -1;
 }
 
+std::vector<int>	NOTICE::findChannel(std::map<std::string, Channel>	mChannelList, std::string name)
+{
+	std::vector<int>	fdList;
+	for (std::map<std::string,Channel>::iterator it = mChannelList.begin(); it != mChannelList.end(); it++)
+	{
+		if (it->second.getName() == name)
+		{
+			std::map<int,Client *> clientList = it->second.getClientList();
+			for (std::map<int, Client *>::iterator itt = clientList.begin(); itt != clientList.end(); itt++)
+				fdList.push_back(itt->first);
+			return fdList;
+		}
+	}
+	return fdList;
+}
+
 void	NOTICE::execute(Server *server, clientIt &iterator, std::vector<std::string> args)
 {
 	if (args.size() < 3)
 		return Rep().E412(iterator->first, iterator->second.getNickname());
-	int	fd = findUser(server->getClientList(), args[1]);
+	std::vector<int>	clientList;
+	int					fd = 0;
+	if (args[1][0] == '#')
+		clientList = findChannel(server->getChannelList(), args[1]);
+	else
+		fd = findUser(server->getClientList(), args[1]);
 	if (fd < 0)
 		return Rep().E401(iterator->first, iterator->second.getNickname(), args[1]);
 	std::string message;
 	for (unsigned int i = 2; i < args.size(); i++)
 		message.append(args[i] += ' ');
 	message.erase(message.size() - 1);
-	std::string ircMessage = "NOTICE " + args[1] + " :" + message + "\r\n";
-	send(fd, ircMessage.c_str(), ircMessage.size(), 0);
+	std::string ircMessage = "NOTICE " + args[1] + " " + message + "\r\n";
+	if (fd != 0)
+		send(fd, ircMessage.c_str(), ircMessage.size(), 0);
+	else
+	{
+		if (clientList.empty())
+			return Rep().E403(iterator->first, iterator->second.getNickname(), args[1]);
+		for (unsigned i = 0; i < clientList.size(); i++)
+		{
+			if (clientList[i] != iterator->first)
+			{
+				std::cout << "sending: " << ircMessage;
+				send(clientList[i], ircMessage.c_str(), ircMessage.size(), 0);
+			}
+		}
+	}
 	std::cout << iterator->second.getNickname() << " sent a notice to " << args[1] << std::endl;
+	std::string	messageToBot = "[FROM]_" + iterator->second.getNickname() + ": " + message + "\r\n";
+	send(server->getBotFd(), messageToBot.c_str(), messageToBot.size(), SOCK_STREAM);
 }
 
 

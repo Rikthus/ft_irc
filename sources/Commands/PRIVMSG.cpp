@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/28 17:35:29 by eavilov           #+#    #+#             */
-/*   Updated: 2023/06/02 14:59:04 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/06/02 16:26:48 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,21 +75,20 @@ void	PRIVMSG::execute(Server *server, clientIt &iterator, std::vector<std::strin
 	std::string	fullMessage = ":" + iterator->second.getNickname() + " " + ircMessage;
 	if (fd != 0)
 	{
-		std::cout << "SENDING TO " << fd << std::endl;
+		std::cout << "sending: " << fullMessage;
 		send(fd, fullMessage.c_str(), fullMessage.size(), 0);
 	}
 	else
 	{
 		if (clientList.empty())
 		{
-			std::cout << "LIST IS EMPTY\n";
 			return Rep().E403(iterator->first, iterator->second.getNickname(), args[1]);
 		}
 		for (unsigned i = 0; i < clientList.size(); i++)
 		{
 			if (clientList[i] != iterator->first)
 			{
-				std::cout << "here SENDING TO " << clientList[i] << " {}" << fullMessage << std::endl;
+				std::cout << "sending: " << fullMessage;
 				send(clientList[i], fullMessage.c_str(), fullMessage.size(), 0);
 			}
 		}

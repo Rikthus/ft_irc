@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:43:38 by eavilov           #+#    #+#             */
-/*   Updated: 2023/05/31 17:11:48 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/06/02 17:16:44 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,30 +25,16 @@ bool	NICK::checkDuplicateNick(std::string nickname, std::map<int,Client> mClient
 void	NICK::execute(Server *server, clientIt &iterator, std::vector<std::string> args)
 {
 	if (!iterator->second.getAuthentication())
-	{
-		//send(iterator->first, "You need to enter the password before trying to register\n", 58, 0);
 		return ;
-	}
 	if (args.size() != 2)
-	{
-		send(iterator->first, "Invalid use of NICK\n", 21, 0);
-		return ;
-	}
+		return Rep().E431(iterator->first, iterator->second.getNickname());
 	std::string name = args[1];
 	if (checkCharactersValidity(name) && !iterator->second.getIsBot())
-	{
-		std::string	error = ":irc.project.com 432 :Erroneous ";
-		error.append(name += '\n');
-		send(iterator->first, error.c_str(), error.size(), 0);
-		return ;
-	}
+		return Rep().E432(iterator->first, iterator->second.getNickname(), name);
 	if (!checkDuplicateNick(name, server->getClientList()))
 		iterator->second.setNickname(name);
 	else
-	{
-		std::string	error("Nickname already taken (" + name + ")\r\n");
-		send(iterator->first, error.c_str(), error.size(), 0);
-	}
+		return Rep().E433(iterator->first, iterator->second.getNickname(), name);
 }
 
 NICK::NICK()
