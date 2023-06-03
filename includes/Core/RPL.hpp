@@ -6,8 +6,8 @@
 #include <ctime>
 #include <sstream>
 
-#define USERMODE_CHARLIST "o"
-#define CHANNELMODE_CHARLIST "ositnmlbvk" //est utilisée pour définir une liste de caractères qui représentent les modes de canal dans un réseau IRC
+#define USERMODE_CHARLIST ""
+#define CHANNELMODE_CHARLIST "oitlk"
 #define NR_ARG int const &fd, const std::string& cNick
 
 class Channel;
@@ -19,7 +19,8 @@ class Rep
 	public:
 		Rep();
 		void	send_to_client(std::string msg, int const &fd);
-		void	send_to_channel(std::string msg, Channel *chan);
+		void	sendListOfUsers(int clientSockfd, std::string nick, Channel *chan);
+		void	sendToChannel(std::string msg, Channel *chan, int skipSockfd);
 		
 				/* ----- Replies ----- */
 		void R001(NR_ARG);

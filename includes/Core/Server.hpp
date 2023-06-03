@@ -19,7 +19,7 @@ class Server
 		Channel 	*findChannel(std::string toFind);
         bool		clientIsInChannel(int toFind, std::string channelName);
 		bool		clientIsOperator(int toFind, std::string channelName);
-        bool		chanAuthentication(std::string channel, std::string pwd, int clientSockfd, std::string clientNick) const;
+        bool		chanAuthentication(std::string channel, std::string pwd, int clientSockfd, std::string clientNick);
         bool        chanModeIsSet(int mode, std::string channelName) const;
         int         findNickSockfd(std::string nick);
 

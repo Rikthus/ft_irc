@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:44:25 by eavilov           #+#    #+#             */
-/*   Updated: 2023/06/02 18:01:52 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/06/03 13:59:30 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	QUIT::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 	}
 	else
 	{
-		std::string	tmpMessage = "QUIT :" + nickname + " has disconnected (" + message + ")\r\n";
+		std::string	tmpMessage = "QUIT:" + nickname + " has disconnected (" + message + ")\r\n";
 		message = tmpMessage;
 	}
 	close(iterator->first);

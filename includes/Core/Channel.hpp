@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
+/*   By: maxperei <maxperei@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 18:11:17 by eavilov           #+#    #+#             */
-/*   Updated: 2023/06/02 14:47:27 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/06/02 17:42:41 by maxperei         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ class Channel
 
 		ClientData  		mClientList;
 		
-		bool	findInvite(int clientSockfd) const;
+		bool	findInvite(int clientSockfd);
 		bool	checkPwd(std::string key) const;
 		bool	checkSpace(void) const;
 		bool	sockClientIsInChan(int clientSockfd);

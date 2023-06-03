@@ -8,14 +8,17 @@
 //		FUNCTIONS		//
 //////////////////////////
 
-bool	Channel::findInvite(int clientSockfd) const
+bool	Channel::findInvite(int clientSockfd)
 {
 	if (!mInviteOnly)
 		return (true);
-	for (unsigned long i = 0; i < mInvited.size(); i++)
+	for (std::vector<int>::iterator it = mInvited.begin(); it != mInvited.end(); it++)
 	{
-		if (mInvited[i] == clientSockfd)
+		if (*it == clientSockfd)
+		{
+			mInvited.erase(it);
 			return (true);
+		}
 	}
 	return (false);
 }
