@@ -31,6 +31,11 @@ class JOIN: public ACmd
 		JOIN(void);
 		~JOIN(void);
 		void execute(Server *server, clientIt &iterator, std::vector<std::string> args);
+
+	private:
+
+		std::vector<std::string>	trimArgs(std::string args);
+		bool						checkHashChar(std::vector<std::string> vec, bool isChan);
 };
 
 class QUIT: public ACmd

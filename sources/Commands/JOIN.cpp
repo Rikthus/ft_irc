@@ -6,46 +6,65 @@ ACmd::~ACmd(void) {}
 
 //********************************  JOIN  ****************************////
 
+std::vector<std::string>	JOIN::trimArgs(std::string args)
+{
+	std::vector<std::string>	channels;
+	std::string	line;
+	std::istringstream iss(args);
+
+	while (std::getline(iss, line, ','))
+	{
+		if (!line.empty())
+			channels.push_back(line);
+	}
+	return (channels);
+}
+
+bool	JOIN::checkHashChar(std::vector<std::string> vec, bool isChan)
+{
+	if (isChan)
+	{
+		for (unsigned long i = 0; i < vec.size(); i++)
+		{
+			if (vec[i].size() < 2 || vec[i][0] != '#')
+				return (false);
+			for (unsigned long j = 1; j < vec[i].size(); j++)
+			{
+				if (vec[i][j] == '#')
+					return (false);
+			}
+		}
+	}
+	else
+	{
+		for (unsigned long i = 0; i < vec.size(); i++)
+		{
+			if (vec[i].size() < 1 || vec[i][0] == '#')
+				return (false);
+		}
+	}
+}
+
 void	JOIN::execute(Server *server, clientIt &it, std::vector<std::string> args)
 {
 	std::vector<std::string>	channels;
 	std::vector<std::string>	keys;
 
-	int		nbChan = 0;
-	int		nbKey = 0;
-	bool	possibleChan = true;
-	bool	possibleKey = false;
-
-	if (args.size() < 2)
+	if (args.size() < 2 || args.size() > 3)
 	{
 		Rep().E461(it->first, it->second.getNickname(), "JOIN");
 		return ;
 	}
-	for (unsigned long i = 1; i < args.size(); i++)
+	channels = this->trimArgs(args[1]);
+	if (args.size() == 3)
+		keys = this->trimArgs(args[2]);
+	if (channels.size() < keys.size() || !checkHashChar(keys, false))
+		Rep().E476(it->first, args[2]);
+	else if (!checkHashChar(channels, true))
+		Rep().E476(it->first, args[1]);
+	else
 	{
-		if (possibleChan && args[i].size() > 1 && args[i][0] == '#' && keys.size() == 0)
-		{
-			channels.push_back(args[i]);
-			nbChan++;
-			possibleKey = true;
-		}
-		else if (args[i].size() < 2 && (!possibleKey || args[i][0] == '#'))
-		{
-			Rep().E476(it->first, args[i]);
-			return ;
-		}
-		else if (possibleKey && nbKey < nbChan)
-		{
-			keys.push_back(args[i]);
-			nbKey++;
-		}
-		else
-		{
-			Rep().E476(it->first, args[i]);
-			return ;
-		}
-	}
-	for (unsigned long i = 0; i < channels.size(); i++)
+		for (unsigned long i = 0; i < channels.size(); i++)
 	{
 		if (i < keys.size())
 		{
@@ -53,7 +72,7 @@ void	JOIN::execute(Server *server, clientIt &it, std::vector<std::string> args)
 			if (chan)
 			{
 				if (chan->clientIsInChan(it->second.getNickname()))
-					Rep().E443(it->first, it->second.getNickname(), args[2], args[1]);
+					Rep().E443(it->first, it->second.getNickname(), channels[i], it->second.getNickname());
 				else if (server->chanAuthentication(channels[i], keys[i], it->first, it->second.getNickname()))
 				{
 					server->joinChan(channels[i], it->first, it->second);
@@ -85,7 +104,7 @@ void	JOIN::execute(Server *server, clientIt &it, std::vector<std::string> args)
 			if (chan)
 			{
 				if (chan->clientIsInChan(it->second.getNickname()))
-					Rep().E443(it->first, it->second.getNickname(), args[2], args[1]);
+					Rep().E443(it->first, it->second.getNickname(), channels[i], it->second.getNickname());
 				else if (server->chanAuthentication(channels[i], NO_PWD, it->first, it->second.getNickname()))
 				{
 					server->joinChan(channels[i], it->first, it->second);
@@ -108,6 +127,7 @@ void	JOIN::execute(Server *server, clientIt &it, std::vector<std::string> args)
 				Rep().send_to_client("MODE " + channels[i] + " +o " + it->second.getNickname(), it->first);
 			}
 		}
+	}
 	}
 }
 
