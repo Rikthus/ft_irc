@@ -43,6 +43,7 @@ bool	JOIN::checkHashChar(std::vector<std::string> vec, bool isChan)
 				return (false);
 		}
 	}
+	return (true);
 }
 
 void	JOIN::execute(Server *server, clientIt &it, std::vector<std::string> args)
