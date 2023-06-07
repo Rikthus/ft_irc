@@ -51,11 +51,10 @@ void	JOIN::execute(Server *server, clientIt &it, std::vector<std::string> args)
 	std::vector<std::string>	channels;
 	std::vector<std::string>	keys;
 
+	if (!it->second.getRegistration())
+		return Rep().E451(it->first, it->second.getNickname());
 	if (args.size() < 2 || args.size() > 3)
-	{
-		Rep().E461(it->first, it->second.getNickname(), "JOIN");
-		return ;
-	}
+		return Rep().E461(it->first, it->second.getNickname(), "JOIN");
 	channels = this->trimArgs(args[1]);
 	if (args.size() == 3)
 		keys = this->trimArgs(args[2]);

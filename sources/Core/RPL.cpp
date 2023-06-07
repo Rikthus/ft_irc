@@ -207,6 +207,13 @@ void Rep::E412(int const &fd, const std::string &cNick)
 	clearBuffer();
 }
 
+void Rep::E421(int const &fd, const std::string &cNick, const std::string& cmd)
+{
+	output << "421 " << cNick << " " << cmd << " :Unknown command";
+	send_to_client(output.str(), fd);
+	clearBuffer();
+}
+
 /**
  * @brief No nickname given
  * 

@@ -2,11 +2,10 @@
 
 void	MODE::execute(Server *server, clientIt &it, std::vector<std::string> args)
 {
+	if (!it->second.getRegistration())
+		return Rep().E451(it->first, it->second.getNickname());
 	if (args.size() < 2)
-	{
-		Rep().E461(it->first, it->second.getNickname(), "MODE");
-		return ;
-	}
+		return Rep().E461(it->first, it->second.getNickname(), "MODE");
 	else if (args[1].size() < 2 || args[1][0] != '#')
 	{
 		Rep().E476(it->first, args[1]);

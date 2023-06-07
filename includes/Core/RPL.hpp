@@ -43,7 +43,7 @@ class Rep
 		void E403(NR_ARG, const std::string& chanName);
 
 		void E412(NR_ARG);
-
+		void E421(NR_ARG, const std::string& cmd);
 		void E431(NR_ARG);
 		void E432(NR_ARG, const std::string& badNick);
 		void E433(NR_ARG, const std::string& badNick);
