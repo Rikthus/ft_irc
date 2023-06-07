@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:44:30 by eavilov           #+#    #+#             */
-/*   Updated: 2023/06/03 16:05:03 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/06/05 13:57:45 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,17 +31,17 @@ void	USER::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 	std::string	username = args[1];
 	if (checkCharactersValidity(username) && !iterator->second.getIsBot())
 		return Rep().E432(iterator->first, iterator->second.getNickname(), username);
-	if (!checkDuplicateUser(username, server->getClientList()))
+	if (!checkDuplicateUser(username, server->getClientList()) && iterator->second.getUsername().empty())
 	{
 		iterator->second.setUsername(username);
 		iterator->second.setRegistration();
 		if (username == "[Mildred]")
 			server->setBotFd(iterator->first);
 		std::cout << username << " successfully registered." << std::endl;
-		Rep().R001(iterator->first, username, server->getPigeon());
-		Rep().R002(iterator->first, username, "*irc de la rue zebi 😂👌*", "0.42");
-		Rep().R003(iterator->first, username, "on a monday");
-		Rep().R004(iterator->first, username);
+		Rep().R001(iterator->first, iterator->second.getNickname(), server->getPigeon());
+		Rep().R002(iterator->first, iterator->second.getNickname(), "*irc de la rue zebi 😂👌*", "0.42");
+		Rep().R003(iterator->first, iterator->second.getNickname(), "on a monday");
+		Rep().R004(iterator->first, iterator->second.getNickname());
 		
 	}
 	else

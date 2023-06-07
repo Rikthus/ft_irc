@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:44:25 by eavilov           #+#    #+#             */
-/*   Updated: 2023/06/03 16:34:49 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/06/05 14:25:41 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,12 @@ void	QUIT::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 				}
 				if (it1->second.getClientList().empty())
 					server->getChannelList().erase(it1);
+				server->getClientList().erase(iterator);
 				return ;
 			}
 		}
 	}
+	server->getClientList().erase(iterator);
 }
 
 QUIT::QUIT()

@@ -38,6 +38,9 @@ void    Server::launch(void)
 				int num_bytes = recv(it->first, buffer, 1024, 0);
 				buffer[num_bytes] = 0;
 				std::string	buf = buffer;
+				std::cout << buf;
+				if (buf.size() > 1023)
+					break ;
 				if (it->second.getUsername() == "[Mildred]" && num_bytes > 0)
 				{
 					std::map<std::string,int>	culprit;

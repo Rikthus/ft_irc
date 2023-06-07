@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 12:43:38 by eavilov           #+#    #+#             */
-/*   Updated: 2023/06/03 16:03:53 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/06/05 14:04:56 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ bool	NICK::checkDuplicateNick(std::string nickname, std::map<int,Client> mClient
 {
 	for (std::map<int,Client>::iterator it = mClientList.begin(); it != mClientList.end(); it++)
 	{
+		std::cout << "Comparing -" << it->second.getNickname() << " and -" << nickname << std::endl;
 		if (!it->second.getNickname().empty() && it->second.getNickname() == nickname)
 			return true;
 	}
@@ -31,10 +32,20 @@ void	NICK::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 	std::string name = args[1];
 	if (checkCharactersValidity(name) && !iterator->second.getIsBot())
 		return Rep().E432(iterator->first, iterator->second.getNickname(), name);
-	if (!checkDuplicateNick(name, server->getClientList()))
+	if (!checkDuplicateNick(name, server->getClientList()) && !iterator->second.getNickname().empty())
+	{
+		std::string	message = ":" + iterator->second.getNickname() + "!" + iterator->second.getUsername() + "@irc.project.com NICK :" + name + "\r\n";
+		std::cout << "Changing name\n";
+		send(iterator->first, message.c_str(), message.size(), 0);
+		iterator->second.setNickname(name);
+	}
+	else if (!checkDuplicateNick(name, server->getClientList()))
 		iterator->second.setNickname(name);
 	else
+	{
+		std::cout << "Already taken (" << args[1] << ")\n";
 		return Rep().E433(iterator->first, iterator->second.getNickname(), name);
+	}
 }
 
 NICK::NICK()

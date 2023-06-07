@@ -78,9 +78,14 @@ class PRIVMSG: public ACmd
 	public:
 		PRIVMSG();
 		~PRIVMSG();
-		int					findUser(std::map<int,Client> mClientList, std::string name);
 		std::vector<int>	findChannel(std::map<std::string, Channel>	mChannelList, std::string name);
+		int	findUser(std::map<int,Client> mClientList, std::string name);
+
+		bool				checkExistingChannel(std::map<std::string, Channel> mChannelList, std::string name);
+		bool				checkExistingClient(std::map<int, Client>  mClientList, std::string name);
 		void				execute(Server *server, clientIt &iterator, std::vector<std::string> args);
+		void				sendMessageInChannel(std::string chanName, std::map<std::string, Channel> chanList, std::string message, clientIt iterator);
+		void				sendMessageToUser(std::string nick, std::map<int, Client> mClientList, std::string message);
 
 	private:
 		const		std::string type;
