@@ -35,7 +35,6 @@ class JOIN: public ACmd
 	private:
 
 		std::vector<std::string>	trimArgs(std::string args);
-		bool						checkHashChar(std::vector<std::string> vec, bool isChan);
 };
 
 class QUIT: public ACmd
