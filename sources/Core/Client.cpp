@@ -14,6 +14,7 @@
 
 Client::Client() : isAuthenticated(0), isRegistered(0), warns(0), isBot(false)
 {
+    hasNickname = 0;
 	clilen = sizeof(this->ClientAddr);
 }
 
