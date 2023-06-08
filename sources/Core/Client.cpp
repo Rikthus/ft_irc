@@ -32,7 +32,8 @@ void Client::appendToBuffer(char * data, int size)
 
 bool Client::extractMessageFromBuffer(std::string &message)
 {
-	size_t newlinePos = buffer.find('\n');
+	std::cout << buffer << std::endl;
+    size_t newlinePos = buffer.find('\n');
     if (newlinePos != std::string::npos)
     {
         message = buffer.substr(0, newlinePos);

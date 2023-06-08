@@ -16,7 +16,6 @@ bool	NICK::checkDuplicateNick(std::string nickname, std::map<int,Client> mClient
 {
 	for (std::map<int,Client>::iterator it = mClientList.begin(); it != mClientList.end(); it++)
 	{
-		std::cout << "Comparing -" << it->second.getNickname() << " and -" << nickname << std::endl;
 		if (!it->second.getNickname().empty() && it->second.getNickname() == nickname)
 			return true;
 	}

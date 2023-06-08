@@ -17,9 +17,9 @@ void	PASS::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 	if (args.size() != 2)
 	{
 		Rep().E464(iterator->first, iterator->second.getNickname());
-		close(iterator->first);
-		FD_CLR(iterator->first, &server->getReadFds());
-		server->getClientList().erase(iterator);
+		// close(iterator->first);
+		// FD_CLR(iterator->first, &server->getReadFds());
+		// server->getClientList().erase(iterator);
 		return ;
 	}
 	std::string	password = args[1];
@@ -35,9 +35,9 @@ void	PASS::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 	else
 	{
 		Rep().E464(iterator->first, iterator->second.getNickname());
-		close(iterator->first);
-		FD_CLR(iterator->first, &server->getReadFds());
-		server->getClientList().erase(iterator);
+		// close(iterator->first);
+		// FD_CLR(iterator->first, &server->getReadFds());
+		// server->getClientList().erase(iterator);
 		return ;
 	}
 
