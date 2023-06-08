@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 11:06:26 by eavilov           #+#    #+#             */
-/*   Updated: 2023/06/02 15:49:13 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/06/08 16:45:12 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,10 @@ void Client::appendToBuffer(char * data, int size)
     }
 }
 
-bool Client::extractMessageFromBuffer(std::string &message)
+bool Client::extractMessageFromBuffer(std::string &message, int fd)
 {
-	std::cout << buffer << std::endl;
+    if (read(fd, NULL, 0) < 0)
+        return false;
     size_t newlinePos = buffer.find('\n');
     if (newlinePos != std::string::npos)
     {

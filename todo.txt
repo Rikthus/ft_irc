@@ -32,4 +32,3 @@ JOIN:
 USEFULL ERRORS:
 
 -E451 you have not registered
--E421 unknown command

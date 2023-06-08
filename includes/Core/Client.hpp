@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 17:46:31 by eavilov           #+#    #+#             */
-/*   Updated: 2023/06/07 15:21:47 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/06/08 17:11:49 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ class Client
             Client();
             ~Client();
             void appendToBuffer(char * data, int size);
-            bool extractMessageFromBuffer(std::string &message);
+            bool extractMessageFromBuffer(std::string &message, int fd);
 
             sockaddr_in &getStruct() {return ClientAddr;}
             socklen_t   &getClilen() {return clilen;}
@@ -61,18 +61,3 @@ class Client
 
 typedef std::map<int, Client>::iterator clientIt;
 typedef std::map<int, Client>::const_iterator constClientIt;
-
-// void 	error(const char *msg);
-// void	authenticateClient(std::string msg, int fd, ft::Client &Client);
-// void	sendMessage(int fd, std::string message);
-// void	registerClientsNick(std::string msg, int fd, ft::Client &Client, std::map<int,ft::Client> Clients);
-// void	registerClientsUser(std::string msg, int fd, ft::Client &Client, std::map<int,ft::Client> Clients);
-
-// bool	checkDuplicateNick(std::map<int, ft::Client> Clients, std::string nickname);
-// bool	checkDuplicateUser(std::map<int, ft::Client> Clients, std::string username);
-// bool	checkCharacter(char character);
-// bool	checkCharactersValidity(std::string name);
-
-// void    newClient(std::map<int, ft::Client> &Clients, int &max_fd, fd_set &readfds, int sockfd);
-// void	registerClientsUser(std::string msg, int fd, ft::Client &Client, std::map<int,ft::Client> Clients);
-// void	registerClientsNick(std::string msg, int fd, ft::Client &Client, std::map<int,ft::Client> Clients);

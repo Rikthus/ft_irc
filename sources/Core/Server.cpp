@@ -64,13 +64,16 @@ void    Server::launch(void)
 				{
 					it->second.appendToBuffer(buffer, num_bytes);
 					std::string	msg;
-					std::istringstream iss(msg);
 					std::string line;
-					while (it->second.extractMessageFromBuffer(msg))
+					while (it->second.extractMessageFromBuffer(msg, tmpSockfd))
 					{
 						std::istringstream stream(msg);
 						while (std::getline(stream, line, ' '))
-						    {applyCommand(line, msg, it, this->readfds);}
+						{
+							if (read(tmpSockfd, NULL, 0) == -1)
+								break;
+							applyCommand(line, msg, it, this->readfds);
+						}
 					}
 				}
 			}
@@ -229,6 +232,17 @@ Server::~Server(void)
 	for (std::map<std::string, ACmd *>::iterator it = mCmdList.begin(); it != mCmdList.end(); it++)
 	 	delete it->second;
 	// mCmdList.erase(mCmdList.begin(), mCmdList.end());
+	for (std::map<int, Client>::iterator it = mClientsList.begin(); it != mClientsList.end(); it++)
+	{
+		if (it->second.getNickname() == "[Mildred]")
+			send(it->first, "[FROM]_[server]_SHUTDOWN\r\n", 27, 0);
+		// else
+		// {
+		// 	close(it->first);
+		// 	FD_CLR(it->first, &readfds);
+		// }
+	}
+	//mClientsList.erase(mClientsList.begin(), mClientsList.end());
 	FD_CLR(mSockfd, &readfds);
 	close(mSockfd);
 }
@@ -291,6 +305,9 @@ void	Server::sendMessage(int fd, std::string message)
 void	Server::applyCommand(std::string line, std::string message, clientIt it, fd_set &readfds)
 {
 	(void) readfds;
+	int		tmpSockfd = it->first;
+	if (read(tmpSockfd, NULL, 0) == -1)
+		return ;
 	std::map<std::string, ACmd *>::iterator	itCmd = mCmdList.find(line);
 	if (itCmd != mCmdList.end())
 	{

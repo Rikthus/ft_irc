@@ -326,6 +326,7 @@ void Rep::E462(int const &fd, const std::string &cNick)
 void Rep::E464(int const &fd, const std::string &cNick)
 {
 	output << "464 " << cNick << " :Password incorrect";
+	std::cout << "output:" << output.str() << std::endl;
 	send_to_client(output.str(), fd);
 	clearBuffer();
 }

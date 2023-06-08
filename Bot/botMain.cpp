@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 18:33:18 by eavilov           #+#    #+#             */
-/*   Updated: 2023/06/03 19:07:55 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/06/08 18:15:55 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,11 @@ void	parse(std::string buffer, int fd, std::vector<std::string> badWords)
 		name = bufCpy.substr(0, bufCpy.find(':'));
 		clientMessage = bufCpy.substr(bufCpy.find(':') + 2, std::string::npos);
 	}
+	else if (bufCpy.find("[FROM]_[server]_SHUTDOWN") != std::string::npos)
+	{
+		std::cerr << "Lost connection to server, shut me down pls" << std::endl;
+		return ;
+	}
 	message.append(name);
 	for (std::vector<std::string>::iterator it = badWords.begin(); it != badWords.end(); it++)
 	{
@@ -39,12 +44,14 @@ void	parse(std::string buffer, int fd, std::vector<std::string> badWords)
 	if (hasSinned == true)
 	{
 		message.append("->3\r\n");
-		send(fd, message.c_str(), message.size(), SOCK_STREAM);
+		if (read(fd, NULL, 0) > -1)
+			send(fd, message.c_str(), message.size(), SOCK_STREAM);
 	}
 	else if (hasInsulted == true)
 	{
 		message.append("->1\r\n");
-		send(fd, message.c_str(), message.size(), SOCK_STREAM);
+		if (read(fd, NULL, 0) > -1)
+			send(fd, message.c_str(), message.size(), SOCK_STREAM);
 	}
 }
 
@@ -65,15 +72,12 @@ int main(int ac, char **av)
 		while (!botSignal)
 		{
 			if (sigaction(SIGINT, &ElBoto.getSignalStruct(), 0) == -1 || botSignal)
-			{
-				std::cout << "signal = 1\n";
-				return 1;
-			}
-			char	buffer[1024];
-			int		endl = recv(ElBoto.getFd(), buffer, 1024, 0);
-			buffer[endl] = 0;
-			std::string	buf = buffer;
-			parse(buf, ElBoto.getFd(), ElBoto.getFilter());
+				{return 1;}
+				char	buffer[1024];
+				int		endl = recv(ElBoto.getFd(), buffer, 1024, 0);
+				buffer[endl] = 0;
+				std::string	buf = buffer;
+				parse(buf, ElBoto.getFd(), ElBoto.getFilter());
 		}
 	}
 	catch (const std::exception &e)
