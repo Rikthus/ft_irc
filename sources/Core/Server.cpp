@@ -38,7 +38,7 @@ void    Server::launch(void)
 				int num_bytes = recv(it->first, buffer, 1024, 0);
 				buffer[num_bytes] = 0;
 				std::string	buf = buffer;
-				std::cout << buf;
+				std::cout << "buffer: " << buf;
 				if (buf.size() > 1023)
 					break ;
 				if (it->second.getUsername() == "[Mildred]" && num_bytes > 0)
@@ -52,7 +52,7 @@ void    Server::launch(void)
 				}
 				if (num_bytes < 0)
 					break ;
-				else if (num_bytes == 0)
+				else if (num_bytes == 0 && buf.find("QUIT") == std::string::npos)
 				{
 					std::cout << "Client " << ntohs(it->second.getPort()) << " disconnected" << std::endl;
 					close(it->first);

@@ -37,6 +37,7 @@ void	QUIT::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 	if (!iterator->second.getNickname().empty())
 		for (std::map<int,Client>::iterator it = server->getClientList().begin(); it != server->getClientList().end(); it++)
 			send(it->first, message.c_str(), message.size(), 0);
+	std::cout << "PURGING THROUGH QUIT COMMAND\n";
 	for (std::map<std::string, Channel>::iterator it1 = server->getChannelList().begin(); it1 != server->getChannelList().end(); it1++)
 	{
 		for (std::map<int, Client*>::iterator it2 = it1->second.getClientList().begin(); it2 != it1->second.getClientList().end(); it2++)

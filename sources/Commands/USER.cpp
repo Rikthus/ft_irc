@@ -37,7 +37,7 @@ void	USER::execute(Server *server, clientIt &iterator, std::vector<std::string> 
 		iterator->second.setRegistration();
 		if (username == "[Mildred]")
 			server->setBotFd(iterator->first);
-		std::cout << username << " successfully registered." << std::endl;
+		std::cout << iterator->second.getNickname() << " successfully registered." << std::endl;
 		Rep().R001(iterator->first, iterator->second.getNickname(), server->getPigeon());
 		Rep().R002(iterator->first, iterator->second.getNickname(), "*irc de la rue zebi 😂👌*", "0.42");
 		Rep().R003(iterator->first, iterator->second.getNickname(), "on a monday");

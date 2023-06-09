@@ -159,6 +159,7 @@ void			PRIVMSG::execute(Server *server, clientIt &iterator, std::vector<std::str
 		{
 			std::string	arg = *it;
 			message = buildMessage(args, arg, iterator->second.getNickname());
+			std::cout << "message sent: " << message;
 			std::map<std::string, Channel>	chanList = server->getChannelList();
 			if (arg[0] == '#')
 				sendMessageInChannel(arg, server->getChannelList(), message, iterator);
