@@ -18,7 +18,7 @@ LST_SRC :=	main \
 			Commands/TOPIC \
 			Commands/USER
 
-BONUS_SRC := Bot/Bot.cpp \
+BONUS_SRC :=	Bot/Bot.cpp \
 				Bot/botMain.cpp
 
 BONUS_NAME := Mildred
@@ -32,7 +32,7 @@ CPPFLAGS := -std=c++98
 #update if needed
 CFLAGS = -Wall -Wextra -Werror -MD -I$(DIR_INC)# -fsanitize=address -g3
 DIR_SRC := sources#.
-SUB_DIR_LST := Core Commands Bot
+SUB_DIR_LST := Core Commands
 
 #shouldn't need to update
 RM := rm -rf
@@ -42,6 +42,7 @@ DIR_INC := includes
 DIR_OBJ := .object
 
 OBJ=$(addprefix $(DIR_OBJ)/,$(addsuffix .o,$(LST_SRC)))
+# OBJ_BONUS=$(addprefix $(DIR_OBJ)/,$(addsuffix .o,$(BONUS_SRC)))
 DEP=$(addprefix $(DIR_OBJ)/,$(addsuffix .d,$(LST_SRC)))
 SUB_DIR=$(addprefix $(DIR_OBJ)/,$(SUB_DIR_LST))
 SUB_DIR_BONUS=$(addprefix $(DIR_OBJ)/,$(SUB_DIR_LST))
@@ -50,7 +51,7 @@ all : $(NAME)
 
 bonus : $(NAME) $(BONUS_NAME)
 
-$(BONUS_NAME) : $(OBJ)
+$(BONUS_NAME) : $(BONUS_SRC)
 	$(CC) $(CFLAGS) $(CPPFLAGS) $(BONUS_SRC) -o $@
 
 $(NAME) : $(OBJ)

@@ -6,7 +6,7 @@
 /*   By: eavilov <eavilov@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 18:33:18 by eavilov           #+#    #+#             */
-/*   Updated: 2023/06/08 18:15:55 by eavilov          ###   ########.fr       */
+/*   Updated: 2023/06/09 14:07:46 by eavilov          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,11 @@ int main(int ac, char **av)
 		Bot	ElBoto("[Mildred]", port);
 		send(ElBoto.getFd(), "PASS 27081998\r\nNICK [Mildred]\r\nUSER [Mildred] 0 * :[Mildred]\r\n", 63, SOCK_STREAM);
 		std::cout << ElBoto.getGoose();
+		char	buffer[1024];
 		while (!botSignal)
 		{
 			if (sigaction(SIGINT, &ElBoto.getSignalStruct(), 0) == -1 || botSignal)
 				{return 1;}
-				char	buffer[1024];
 				int		endl = recv(ElBoto.getFd(), buffer, 1024, 0);
 				buffer[endl] = 0;
 				std::string	buf = buffer;
@@ -85,3 +85,6 @@ int main(int ac, char **av)
         std::cerr << e.what() << std::endl;
     }
 }
+
+
+
