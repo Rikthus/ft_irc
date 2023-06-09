@@ -19,7 +19,7 @@ extern int botSignal;
 class Bot
 {
 	public:
-		Bot(std::string name, std::string port);
+		Bot(std::string name, std::string port); 
 		Bot();
 		~Bot();
 		

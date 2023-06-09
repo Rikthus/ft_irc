@@ -20,6 +20,7 @@ LST_SRC :=	main \
 
 BONUS_SRC :=	Bot/Bot.cpp \
 				Bot/botMain.cpp
+BONUS_INCS :=	Bot/Bot.hpp 
 
 BONUS_NAME := Mildred
 
@@ -51,7 +52,7 @@ all : $(NAME)
 
 bonus : $(NAME) $(BONUS_NAME)
 
-$(BONUS_NAME) : $(BONUS_SRC)
+$(BONUS_NAME) : $(BONUS_SRC) $(BONUS_INCS)
 	$(CC) $(CFLAGS) $(CPPFLAGS) $(BONUS_SRC) -o $@
 
 $(NAME) : $(OBJ)
