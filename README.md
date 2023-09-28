@@ -1,4 +1,7 @@
-# ROADMAP
+# IRC chat for Hexchat client
+It also works with netcat (`nc` command)
+
+## ROADMAP
 
  - Set up a TCP server socket to listen for incoming connections from clients.
 
@@ -29,23 +32,18 @@
 
  ## Irc Commands
 
- - /join #channel							(join channel)
- - /list [#channel] [-MIN #] [-MAX #]		(list channels)
- - /invite nickname #channel				(invite someone to channel)
- - /me message								(state an action you are doing)
- - /msg nickname message  
- - /nick nickname							(changes nickname)
- - /leave #channel							(leaves a channel)
- - /quit [message]							(exit irc)
+ - JOIN
+ - KICK
+ - MODE
+ - TOPIC
+ - INVITE
+ - PRIVMSG 
+ - NICK
+ - USER
+ - PASS
+ - QUIT
 
- ## Needed
-
- - `class Server` WIP maxperei 
- - `class Channel`
- - `class Client`
- - a specific class for each command (eg: `class Join`)
-
- ## WeeChat specific commands
+ ## WeeChat specific commands (not tested the final version with weechat)
 
  -	To create a server -> /server add <server_name> 127.0.0.1/6667 -password=3333 (needs to be specified in the case of the project)
  -	To connect to the server -> /connect <server_name>
@@ -54,8 +52,3 @@
  -	to access said tab -> /buffer <target>
  -	`NOTICE`	-> /notice <target> <message to send>
  -	`JOIN`		-> /join #<channel_name>
-
- ## ROADMAP PARSING
-
- -	Numerical replies for various mistakes (NICK - USER - PASS)
- -	PRIVMSG on channel
